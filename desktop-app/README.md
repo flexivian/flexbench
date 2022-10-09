@@ -16,7 +16,7 @@ This project is built with electron and react
 1. Install dependency `npm run install-dep`
 2. Start the development server for linux-mac `npm run dev` and for windows `npm run w-dev`
 
-Runs the app in the development mode.\
+Runs the app in the development mode.
 
 "dev": "concurrently \"npm start\" \"wait-on http://localhost:3000 && electron .\"",
 
@@ -25,24 +25,24 @@ Concurrently will handle both the process:
   - React (renderer process)
   - Electron (main process)
 
-wait-on simply waits for the react(renderer process) to start ans then starts the electron process.\
+wait-on simply waits for the react(renderer process) to start and then starts the electron process.
 
-The page will reload when you make changes in src directory.\
+The page will reload when you make changes in `src` directory.
 
-But any change in the public/electron.js file will not reflecct.\
+But any change in the `public/electron.js` file will not reflect.\
 For this re run the above script (`npm run dev`).
 
 
 ### To build the executable files (unpacked) and installer
 
-Open terminal in desktop-app directory and run the command-
+Open terminal in desktop-app directory and run the command:
 
 `npm run electron:build`
 
-if above command throws error try-
+if above command throws error try:
 
 `npm electron:build`
 
-The executables and installer can be found in the `/dist` 
+The executables and installer can be found in the `/dist` folder
 
 
