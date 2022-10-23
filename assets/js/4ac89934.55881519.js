@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkflexbench=self.webpackChunkflexbench||[]).push([[775],{5490:e=>{e.exports=JSON.parse('{"label":"GFOSS","permalink":"/flexbench/blog/tags/gfoss","allTagsPath":"/flexbench/blog/tags","count":1}')}}]);

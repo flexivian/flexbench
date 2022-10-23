@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkflexbench=self.webpackChunkflexbench||[]).push([[461],{9300:e=>{e.exports=JSON.parse('{"permalink":"/flexbench/blog/tags/gfoss","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://flexivial.github.io/flexbench/blog</id>
+    <title>Flexbench Blog</title>
+    <updated>2021-08-26T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://flexivial.github.io/flexbench/blog"/>
+    <subtitle>Flexbench Blog</subtitle>
+    <icon>https://flexivial.github.io/flexbench/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[GSoC 2022]]></title>
+        <id>GSoC 2022</id>
+        <link href="https://flexivial.github.io/flexbench/blog/GSoC 2022"/>
+        <updated>2021-08-26T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Blog post for the GSOC 2022 can be accessed from here]]></summary>
+        <content type="html"><![CDATA[<p>Blog post for the GSOC 2022 can be accessed from <a href="https://medium.com/new-story" target="_blank" rel="noopener noreferrer">here</a></p>]]></content>
+        <author>
+            <name>Kanha Agrawal</name>
+            <uri>https://github.com/kanha-13</uri>
+        </author>
+        <category label="Flexbench" term="Flexbench"/>
+        <category label="Flexivian" term="Flexivian"/>
+        <category label="GSOC" term="GSOC"/>
+        <category label="GSOC@2022" term="GSOC@2022"/>
+        <category label="GFOSS" term="GFOSS"/>
+    </entry>
+</feed>
