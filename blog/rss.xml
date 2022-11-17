@@ -4,7 +4,7 @@
         <title>Flexbench Blog</title>
         <link>https://flexivial.github.io/flexbench/blog</link>
         <description>Flexbench Blog</description>
-        <lastBuildDate>Thu, 26 Aug 2021 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 15 Nov 2022 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
@@ -12,9 +12,9 @@
             <title><![CDATA[GSoC 2022]]></title>
             <link>https://flexivial.github.io/flexbench/blog/GSoC 2022</link>
             <guid>GSoC 2022</guid>
-            <pubDate>Thu, 26 Aug 2021 00:00:00 GMT</pubDate>
+            <pubDate>Tue, 15 Nov 2022 00:00:00 GMT</pubDate>
             <description><![CDATA[Blog post for the GSOC 2022 can be accessed from here]]></description>
-            <content:encoded><![CDATA[<p>Blog post for the GSOC 2022 can be accessed from <a href="https://medium.com/new-story" target="_blank" rel="noopener noreferrer">here</a></p>]]></content:encoded>
+            <content:encoded><![CDATA[<p>Blog post for the GSOC 2022 can be accessed from <a href="https://medium.com/@kanha_agrawal/gsoc-2022-flexbench-traffic-simulation-redefined-bcb96459e7f5" target="_blank" rel="noopener noreferrer">here</a></p>]]></content:encoded>
             <category>Flexbench</category>
             <category>Flexivian</category>
             <category>GSOC</category>
