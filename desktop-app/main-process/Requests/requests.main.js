@@ -26,60 +26,86 @@ function deleteRequest(event, args) {
 
 async function runRequest(event, args) {
   try {
+    // Log the function call and its arguments
+    console.log('runRequest called with args:', args);
+
     const data = {
       request: args.request,
       scenario: args.scenario
+    };
+
+    // Log the temp directory path
+    const tempDir = path.join(userDataPath, "Temp");
+    console.log('Temp directory:', tempDir);
+
+    // Check and create the temp directory if it doesn't exist
+    if (!fs.existsSync(tempDir)) {
+      console.log('Creating Temp directory');
+      fs.mkdirSync(tempDir);
     }
-    if (!fs.existsSync(path.join(userDataPath, "Temp"))) {
-      fs.mkdirSync(path.join(userDataPath, "Temp"));
-    }
+
     let templatepath;
     let worker_id;
 
+    // Determine the template path and worker ID
     if (Array.isArray(args.request)) {
-      templatepath = '../../tests/multi-requests.js'
-      worker_id = args.scenario._id
+      templatepath = '../../tests/multi-requests.js';
+      worker_id = args.scenario._id;
+    } else {
+      templatepath = '../../tests/simple-request.js';
+      worker_id = args.request._id;
     }
-    else {
-      templatepath = '../../tests/simple-request.js'
-      worker_id = args.request._id
-    }
+    console.log('Template path:', templatepath);
 
-    let temp_worker = new Worker(path.join(__dirname, templatepath))
+    // Initialize the worker
+    let temp_worker = new Worker(path.join(__dirname, templatepath));
     workers.push({ worker: temp_worker, _id: worker_id });
 
-    //writing configuration in seperate file for every new request
-    //writing the configuration for workers forked by lib/main -> start()
-    //because the workers forked by start() can't access the worker_data if sent from here
-    let filename = process.pid + `${temp_worker.threadId}`
-    let filepath = path.join(userDataPath, `Temp/${filename}.json`)
+    // Log the filepath for the request configuration
+    let filename = process.pid + `${temp_worker.threadId}`;
+    let filepath = path.join(tempDir, `${filename}.json`);
+    console.log('Filepath for request config:', filepath);
 
+    // Write the request configuration to a file
     fs.writeFileSync(filepath, JSON.stringify(data), (err) => {
       if (err) {
+        console.error('Error writing request config file:', err);
         throw err;
       }
     });
 
-    //returning result 
+    // Return the result using a Promise
     const status = new Promise((resolve, reject) => {
       temp_worker.once("message", async (stats) => {
-        deleteTempConfigFile(worker_id)
-        popRequest(filepath)
+        console.log('Worker message received:', stats);
+
+        deleteTempConfigFile(worker_id);
+        popRequest(filepath);
+
         try {
-          const logs = fs.readFileSync(path.join(userDataPath, `Temp/${filename}.txt`))
-          stats['logs'] = logs.toString() || ""
-          popRequest(path.join(userDataPath, `Temp/${filename}.txt`));
-          resolve(stats)
+          const logsPath = path.join(tempDir, `${filename}.txt`);
+          const logs = fs.readFileSync(logsPath);
+          stats['logs'] = logs.toString() || "";
+          popRequest(logsPath);
         } catch (error) {
-          stats["logs"] = ""
-          resolve(stats)
+          console.error('Error reading logs:', error);
+          stats["logs"] = "";
         }
+
+        resolve(stats);
       });
-    })
-    return status
+
+      // Log worker errors
+      temp_worker.on('error', (error) => {
+        console.error('Worker error:', error);
+        reject(error);
+      });
+    });
+
+    return status;
   } catch (error) {
-    resolve({ error: error })
-    return error
+    console.error('Error in runRequest:', error);
+    return { error: error.message };
   }
 }
 
