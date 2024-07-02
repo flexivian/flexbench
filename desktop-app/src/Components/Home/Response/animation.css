@@ -45,8 +45,8 @@
   width: var(--size);
   height: var(--size);
   position: absolute;
-  left: 50%; /* New property */
-  transform: translateX(-50%); /* New property */
+  left: 50%; 
+  transform: translateX(-50%); 
   border-radius: 50%;
   display: grid;
   place-items: center;
@@ -79,6 +79,6 @@
   border-radius: 0.5vw;
   cursor: pointer;
   z-index: 5;
-  left: 50%; /* New property */
-  transform: translateX(-50%); /* New property */
+  left: 50%; 
+  transform: translateX(-50%); 
 }
