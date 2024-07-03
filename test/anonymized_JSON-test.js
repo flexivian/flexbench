@@ -1,6 +1,6 @@
 var assert = require("assert"),
     should = require('should'),
-    { anonymizeObject, setAnonymization } = require('../lib/anonymizer.js');
+    { anonymizeObject, setAnonymization } = require('../lib/anonymizer');
 
 describe('Anonymization Tests for JSON Data', () => {
     const exampleJson = {

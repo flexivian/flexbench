@@ -1,6 +1,6 @@
 var assert = require("assert"),
     should = require('should'),
-    { anonymizeFormData, setAnonymization } = require('../lib/anonymizer.js'),
+    { anonymizeFormData, setAnonymization } = require('../lib/anonymizer'),
     stream = require('stream');
 
 describe('Anonymization Tests for Form Data', () => {
