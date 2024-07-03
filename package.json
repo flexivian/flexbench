@@ -6,6 +6,7 @@
   "dependencies": {
     "agentkeepalive": "^4.2.1",
     "express": "^4.17.3",
+    "flexbench": "^1.0.0",
     "multiparty": "^4.2.3",
     "node-mocks-http": "^1.15.0",
     "throttle": "1.x"
