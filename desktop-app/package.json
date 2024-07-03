@@ -14,7 +14,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
-    "agentkeepalive": "^4.2.1",
+    "agentkeepalive": "^4.5.0",
     "electron-is-dev": "^2.0.0",
     "express": "^4.17.3",
     "pretty": "^2.0.0",
@@ -90,7 +90,7 @@
   "devDependencies": {
     "concurrently": "^7.2.1",
     "cross-env": "^7.0.3",
-    "electron": "^19.0.4",
+    "electron": "^30.0.8",
     "electron-builder": "^23.0.3",
     "electron-reload": "^2.0.0-alpha.1",
     "wait-on": "^6.0.1",
