@@ -5,6 +5,7 @@
   "main": "lib/main.js",
   "dependencies": {
     "agentkeepalive": "^4.2.1",
+    "bcryptjs": "^2.4.3",
     "express": "^4.17.3",
     "flexbench": "^1.0.0",
     "multiparty": "^4.2.3",
@@ -12,6 +13,7 @@
     "throttle": "1.x"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "chai": "^5.1.1",
     "mocha": "^10.5.2",
     "should": "~3.1.3"
