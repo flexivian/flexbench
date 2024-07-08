@@ -1,10 +1,10 @@
 {
   "name": "flexbench",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Generate HTTP traffic",
   "main": "lib/main.js",
   "dependencies": {
-    "agentkeepalive": "^4.2.1",
+    "agentkeepalive": "^4.5.0",
     "express": "^4.17.3",
     "flexbench": "^1.0.0",
     "multiparty": "^4.2.3",
