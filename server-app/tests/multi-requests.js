@@ -1,5 +1,5 @@
 const fs = require("fs");
-const libpath = process.env.NODE_ENV?.trim() === "dockerDevelopment" ? '../dist/lib/main.js' : '../../lib/main.js';
+const libpath = '../lib/main.js';
 const trafficSimulator = require(libpath);
 const { parentPort, threadId } = require("worker_threads")
 const path = require("path")
@@ -21,6 +21,8 @@ function runTest() {
   trafficSimulator.throttleRequests_bps(parseInt(scenario.throttling));//-1 for no throttling
   trafficSimulator.randomDelayBetweenRequests(scenario.delay);
   trafficSimulator.setFunc('request', requestFunc);
+
+  
 
   trafficSimulator.start(threadId);
 

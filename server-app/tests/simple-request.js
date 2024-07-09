@@ -1,5 +1,5 @@
 const fs = require("fs");
-const libpath = process.env.NODE_ENV?.trim() === "dockerDevelopment" ? '../dist/lib/main.js' : '../../lib/main.js';
+const libpath = '../lib/main.js';
 const trafficSimulator = require(libpath);
 const { parentPort, threadId } = require("worker_threads")
 const path = require("path")
@@ -22,6 +22,7 @@ function runTest() {
     trafficSimulator.randomDelayBetweenRequests(scenario.delay);
     trafficSimulator.setFunc('request', requestFunc);
     trafficSimulator.start(threadId);
+    
 
     trafficSimulator.events.on('end', function (stats) {
         parentPort.postMessage(stats)
