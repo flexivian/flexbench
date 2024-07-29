@@ -1,10 +1,19 @@
+
+# Research Report: Parsing OpenAPI (Swagger) Documents using Node.js
+
 ## Introduction
 
-This report explores how to parse OpenAPI (Swagger) documents using Node.js. The goal is to identify suitable libraries and methods to read and extract information from OpenAPI documents. 
+This report explores how to parse OpenAPI (Swagger) documents using Node.js. The goal is to identify suitable libraries and methods to read and extract information from OpenAPI documents.
 
-## Swagger Parser for OpenAPI Document Parsing
+## Available Node.js Libraries for OpenAPI Document Parsing
 
-### Swagger Parser
+### 1. Swagger Parser
+
+**Description**: Swagger Parser is a powerful schema validator for OpenAPI specifications.
+
+**Features**:
+- Parse, validate, and dereference JSON/YAML schemas.
+- Resolve references (`$ref`) and bundle schemas.
 
 **Installation**:
 ```bash
@@ -16,172 +25,293 @@ npm install @apidevtools/swagger-parser
 const SwaggerParser = require('@apidevtools/swagger-parser');
 
 async function parseOpenAPI() {
-  const api = await SwaggerParser.validate('/openapi.yaml');
+  const api = await SwaggerParser.validate('path/to/openapi.yaml');
   console.log(api);
 }
 
 parseOpenAPI();
 ```
 
+## Break down of OpenAPI (Swagger) file structure
 
-# Implementing a New Module for Flexbench to Read OpenAPI (Swagger) Documents and Create Test Scenarios
+1. **OpenAPI Version**:
+   - Specifies the version of the OpenAPI Specification that the document conforms to.
+   ```yaml
+   openapi: 3.0.0
+   ```
+
+2. **Info**:
+   - Provides metadata about the API, including the title, description, version, terms of service, contact information, and license.
+   ```yaml
+   info:
+     title: Sample API
+     description: A sample API to illustrate OpenAPI concepts
+     version: 1.0.0
+     termsOfService: http://example.com/terms/
+     contact:
+       name: API Support
+       url: http://www.example.com/support
+       email: support@example.com
+     license:
+       name: Apache 2.0
+       url: http://www.apache.org/licenses/LICENSE-2.0.html
+   ```
+
+3. **Servers**:
+   - Defines the base URLs for the API. These can include server environments like development, staging, and production.
+   ```yaml
+   servers:
+     - url: https://api.example.com/v1
+       description: Production server
+     - url: https://staging-api.example.com/v1
+       description: Staging server
+   ```
+
+4. **Paths**:
+   - Specifies the available endpoints (paths) for the API and the HTTP methods supported by each endpoint. Each path can have multiple operations (e.g., GET, POST, PUT, DELETE).
+   ```yaml
+   paths:
+     /users:
+       get:
+         summary: Get users
+         operationId: getUsers
+         responses:
+           '200':
+             description: A list of users
+             content:
+               application/json:
+                 schema:
+                   type: array
+                   items:
+                     type: object
+                     properties:
+                       id:
+                         type: integer
+                       name:
+                         type: string
+       post:
+         summary: Create user
+         operationId: createUser
+         requestBody:
+           required: true
+           content:
+             application/json:
+               schema:
+                 type: object
+                 properties:
+                   name:
+                     type: string
+                   email:
+                     type: string
+         responses:
+           '201':
+             description: User created
+             content:
+               application/json:
+                 schema:
+                   type: object
+                   properties:
+                     id:
+                       type: integer
+                     name:
+                       type: string
+                     email:
+                       type: string
+     /users/{id}:
+       get:
+         summary: Get user by ID
+         operationId: getUserById
+         parameters:
+           - name: id
+             in: path
+             required: true
+             schema:
+               type: integer
+         responses:
+           '200':
+             description: User details
+             content:
+               application/json:
+                 schema:
+                   type: object
+                   properties:
+                     id:
+                       type: integer
+                     name:
+                       type: string
+                     email:
+                       type: string
+   ```
+
+5. **Components**:
+   - Reusable components such as schemas, responses, parameters, examples, request bodies, headers, security schemes, and callbacks. These components can be referenced throughout the specification to avoid duplication.
+   ```yaml
+   components:
+     schemas:
+       User:
+         type: object
+         properties:
+           id:
+             type: integer
+           name:
+             type: string
+           email:
+             type: string
+     responses:
+       NotFound:
+         description: Entity not found
+     parameters:
+       userId:
+         name: id
+         in: path
+         required: true
+         schema:
+           type: integer
+   ```
+
+6. **Security**:
+   - Describes the security mechanisms (e.g., API key, OAuth2, Basic authentication) that are used to protect the API endpoints.
+   ```yaml
+   security:
+     - apiKeyAuth: []
+   components:
+     securitySchemes:
+       apiKeyAuth:
+         type: apiKey
+         in: header
+         name: X-API-Key
+   ```
+
+7. **Tags**:
+   - Allows for logical grouping of operations by resources or any other qualifier. Tags can be used for organizing the documentation.
+   ```yaml
+   tags:
+     - name: user
+       description: Operations related to users
+   ```
+
+8. **External Documentation**:
+   - Provides additional external documentation references.
+   ```yaml
+   externalDocs:
+     description: Find more info here
+     url: http://example.com
+   ```
 
 
-1. **Phase 1**: Generate a bash script with cURL commands using ML and Node.js.
-2. **Phase 2**: Create ready-to-use `.flex` scenarios to be consumed by the Flexbench server and desktop app.
+## Functions and Methods of Swagger Parser
 
-## Phase 1: Generating Bash Script with cURL Commands
+### 1. `validate`
 
-### Step 1: Setup and Installation
+Validates an OpenAPI document and returns the dereferenced API object. This ensures the document conforms to the OpenAPI Specification.
 
-Install the necessary libraries for parsing OpenAPI documents and generating test data.
+**Example Usage**:
+```javascript
+const SwaggerParser = require('@apidevtools/swagger-parser');
 
-```bash
-npm install @apidevtools/swagger-parser faker axios
+async function validateOpenAPI(filePath) {
+  try {
+    const api = await SwaggerParser.validate(filePath);
+    console.log('API name:', api.info.title);
+    console.log('API version:', api.info.version);
+  } catch (err) {
+    console.error('Validation failed:', err.message);
+  }
+}
+
+validateOpenAPI('path/to/openapi.yaml');
 ```
 
-### Step 2: Module Implementation
+### 2. `dereference`
 
-Create a new module file, e.g., `openapi-curl-generator.js`.
+Dereferences an OpenAPI document, replacing all `$ref` pointers with the referenced objects. This is useful for working with a fully resolved API definition.
 
+**Example Usage**:
+```javascript
+const SwaggerParser = require('@apidevtools/swagger-parser');
+
+async function dereferenceOpenAPI(filePath) {
+  try {
+    const api = await SwaggerParser.dereference(filePath);
+    console.log('Dereferenced API:', JSON.stringify(api, null, 2));
+  } catch (err) {
+    console.error('Dereferencing failed:', err.message);
+  }
+}
+
+dereferenceOpenAPI('path/to/openapi.yaml');
+```
+
+### 3. `bundle`
+
+Bundles the OpenAPI document into a single file, resolving all references but keeping the `$ref` pointers intact. This is useful for creating a self-contained API definition.
+
+**Example Usage**:
 ```javascript
 const SwaggerParser = require('@apidevtools/swagger-parser');
 const fs = require('fs');
-const path = require('path');
-const faker = require('faker'); // Library for generating fake data
 
-async function generateCurlCommands(openApiFilePath, outputFilePath) {
-    try {
-        const api = await SwaggerParser.validate(openApiFilePath);
-        const commands = [];
-
-        for (const [pathKey, pathValue] of Object.entries(api.paths)) {
-            for (const [method, operation] of Object.entries(pathValue)) {
-                const command = createCurlCommand(pathKey, method, operation);
-                commands.push(command);
-            }
-        }
-
-        fs.writeFileSync(outputFilePath, commands.join('\n\n'));
-        console.log(`cURL commands generated and saved to ${outputFilePath}`);
-    } catch (err) {
-        console.error(`Error generating cURL commands: ${err.message}`);
-    }
+async function bundleOpenAPI(filePath, outputPath) {
+  try {
+    const api = await SwaggerParser.bundle(filePath);
+    fs.writeFileSync(outputPath, JSON.stringify(api, null, 2));
+    console.log('Bundled API saved to', outputPath);
+  } catch (err) {
+    console.error('Bundling failed:', err.message);
+  }
 }
 
-function createCurlCommand(path, method, operation) {
-    const url = `http://localhost:3000${path}`; 
-    const headers = operation.parameters
-        .filter(param => param.in === 'header')
-        .map(param => `-H "${param.name}: ${faker.random.word()}"`).join(' ');
-    const queryParams = operation.parameters
-        .filter(param => param.in === 'query')
-        .map(param => `${param.name}=${faker.random.word()}`).join('&');
-    const bodyParams = operation.parameters
-        .filter(param => param.in === 'body' && param.schema)
-        .map(param => JSON.stringify(generateFakeData(param.schema))).join(' ');
-
-    let command = `curl -X ${method.toUpperCase()} "${url}`;
-    if (queryParams) {
-        command += `?${queryParams}`;
-    }
-    command += `" ${headers}`;
-    if (bodyParams) {
-        command += ` -d '${bodyParams}'`;
-    }
-
-    return command;
-}
-
-function generateFakeData(schema) {
-    const data = {};
-    for (const [key, value] of Object.entries(schema.properties)) {
-        if (value.type === 'string') {
-            data[key] = faker.lorem.word();
-        } else if (value.type === 'integer') {
-            data[key] = faker.datatype.number();
-        } else if (value.type === 'boolean') {
-            data[key] = faker.datatype.boolean();
-        }
-    }
-    return data;
-}
-
-module.exports = {
-    generateCurlCommands
-};
+bundleOpenAPI('path/to/openapi.yaml', 'path/to/bundled-api.json');
 ```
 
-### Step 3: Example Usage
+### 4. `parse`
 
-Create a script to use the new module, e.g., `generate-curl.js`.
+Parses the OpenAPI document and returns the parsed API object without validation. This is useful for quickly loading the API definition without checking for correctness.
 
-```javascript
-const { generateCurlCommands } = require('./openapi-curl-generator');
-
-const openApiFilePath = '/openapi.yaml';
-const outputFilePath = './curl-commands.sh'; 
-
-generateCurlCommands(openApiFilePath, outputFilePath);
-```
-
-Run the script to generate the bash script with cURL commands.
-
-```bash
-node generate-curl.js
-```
-
-### Step 4: Publishing as an NPM Package
-
-1. **Create a `package.json` file** if it doesn't exist.
-
-   ```bash
-   npm init -y
-   ```
-
-2. **Update `package.json`** to add a bin entry for the script.
-
-   ```json
-   {
-     "name": "openapi-curl-generator",
-     "version": "1.0.0",
-     "description": "Generate bash script with curl commands from OpenAPI documents",
-     "main": "openapi-curl-generator.js",
-     "bin": {
-       "generate-curl": "./generate-curl.js"
-     },
-     "scripts": {
-       "test": "echo \"Error: no test specified\" && exit 1"
-     },
-     "author": "Your Name",
-     "license": "ISC",
-     "dependencies": {
-       "@apidevtools/swagger-parser": "^10.0.2",
-       "faker": "^5.5.3"
-     }
-   }
-   ```
-
-3. **Publish the package** to npm.
-
-   ```bash
-   npm publish
-   ```
-
-## Phase 2: Creating Ready-to-Use .flex Scenarios
-
-### Step 1: Setup and Installation
-
-Ensure you have the necessary libraries installed from Phase 1.
-
-### Step 2: Module Implementation
-
-Extend the existing module or create a new one, e.g., `openapi-flex-generator.js`.
-
+**Example Usage**:
 ```javascript
 const SwaggerParser = require('@apidevtools/swagger-parser');
+
+async function parseOpenAPI(filePath) {
+  try {
+    const api = await SwaggerParser.parse(filePath);
+    console.log('Parsed API:', JSON.stringify(api, null, 2));
+  } catch (err) {
+    console.error('Parsing failed:', err.message);
+  }
+}
+
+parseOpenAPI('path/to/openapi.yaml');
+```
+
+## Information useful to Flexbench testing purpose
+
+1.	API Endpoints:
+	•	Description: Extract the list of all available endpoints (paths) in the API.
+	•	Usage: Each endpoint represents a test scenario where various HTTP methods (GET, POST, PUT, DELETE) need to be tested.
+2.	HTTP Methods:
+	•	Description: For each endpoint, identify the supported HTTP methods.
+	•	Usage: Determine the type of requests to be made (e.g., GET requests for retrieving data, POST requests for creating data).
+3.	Parameters:
+	•	Path Parameters: Extract path parameters required by the endpoint.
+	•	Query Parameters: Extract optional or required query parameters.
+	•	Header Parameters: Extract any custom headers required for the request.
+	•	Body Parameters: Extract the schema for the request body (for methods like POST and PUT).
+4.	Request Body Schema:
+	•	Description: For methods that require a request body (e.g., POST, PUT), extract the schema and generate realistic test data.
+	•	Usage: Use tools like Faker to generate valid input data for testing different scenarios (e.g., valid and invalid data).
+5.	Responses:
+	•	Description: Extract the expected responses for each endpoint and method, including the status codes and response body schemas.
+	•	Usage: Verify that the actual responses match the expected responses defined in the OpenAPI document.
+6.	Security Requirements:
+	•	Description: Identify any security mechanisms (e.g., API keys, OAuth2) required to access the endpoints.
+	•	Usage: Include appropriate authentication headers in the test scenarios.
+
+## Example Implementation
+
+```
+const SwaggerParser = require('@apidevtools/swagger-parser');
 const fs = require('fs');
-const path = require('path');
 const faker = require('faker');
 
 async function generateFlexScenarios(openApiFilePath, outputDir) {
@@ -205,14 +335,65 @@ async function generateFlexScenarios(openApiFilePath, outputDir) {
 }
 
 function createFlexScenario(path, method, operation) {
-    return {
+    const scenario = {
         path,
         method,
         summary: operation.summary || '',
         description: operation.description || '',
-        parameters: operation.parameters || [],
-        responses: operation.responses || {}
+        parameters: extractParameters(operation.parameters),
+        requestBody: operation.requestBody ? generateFakeData(operation.requestBody.content['application/json'].schema) : null,
+        responses: extractResponses(operation.responses),
+        security: operation.security || []
     };
+
+    return scenario;
+}
+
+function extractParameters(parameters) {
+    const extracted = {
+        path: {},
+        query: {},
+        header: {},
+        body: {}
+    };
+
+    if (parameters) {
+        parameters.forEach(param => {
+            if (param.in === 'path') {
+                extracted.path[param.name] = param.schema;
+            } else if (param.in === 'query') {
+                extracted.query[param.name] = param.schema;
+            } else if (param.in === 'header') {
+                extracted.header[param.name] = param.schema;
+            } else if (param.in === 'body') {
+                extracted.body[param.name] = param.schema;
+            }
+        });
+    }
+
+    return extracted;
+}
+
+function generateFakeData(schema) {
+    const data = {};
+    for (const [key, value] of Object.entries(schema.properties)) {
+        if (value.type === 'string') {
+            data[key] = faker.lorem.word();
+        } else if (value.type === 'integer') {
+            data[key] = faker.datatype.number();
+        } else if (value.type === 'boolean') {
+            data[key] = faker.datatype.boolean();
+        }
+    }
+    return data;
+}
+
+function extractResponses(responses) {
+    const extracted = {};
+    for (const [statusCode, response] of Object.entries(responses)) {
+        extracted[statusCode] = response.description;
+    }
+    return extracted;
 }
 
 module.exports = {
@@ -220,43 +401,5 @@ module.exports = {
 };
 ```
 
-### Step 3: Example Usage
-
-Create a script to use the new module, e.g., `generate-flex.js`.
-
-```javascript
-const { generateFlexScenarios } = require('./openapi-flex-generator');
-
-const openApiFilePath = '/openapi.yaml'; 
-const outputDir = './flex-scenarios'; 
-
-generateFlexScenarios(openApiFilePath, outputDir);
-```
-
-Run the script to generate the .flex scenarios.
-
-```bash
-node generate-flex.js
-```
-
-## Integration with Flexbench
-
-Modify Flexbench to read and execute the generated `.flex` scenarios. This involves updating the Flexbench test runner to parse the `.flex` files and execute the scenarios accordingly.
-
-## Documentation
-
-Update the Flexbench documentation to include details about the new module.
-
-
-## Summary of Findings and Recommended Approach
-
-Based on the research, the following libraries are recommended for parsing OpenAPI documents in Node.js:
-
-- **Swagger Parser**: Ideal for validating, parsing, and dereferencing OpenAPI documents. It is simple to use and handles `$ref` resolution efficiently.
-
 **Recommended Approach**:
-For the Flexbench project, **Swagger Parser** is recommended due to its simplicity and efficiency in parsing and validating OpenAPI documents. It will help in ensuring that the OpenAPI documents are correctly formatted and fully dereferenced.
-
-## Conclusion
-
-This report provides an overview of available Node.js libraries for parsing OpenAPI documents and recommends using Swagger Parser for the Flexbench project due to its robust features and ease of use.
+For the Flexbench project, **Swagger Parser** is recommended
