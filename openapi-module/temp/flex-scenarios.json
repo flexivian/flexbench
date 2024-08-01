@@ -1,0 +1,46 @@
+{
+  "scenarioConfig": {
+    "scenario": {
+      "delay": "0.5-1.5",
+      "throttling": "50000",
+      "workers": "4",
+      "totalclients": "10",
+      "duration": "5"
+    },
+    "requests": [
+      {
+        "method": "GET",
+        "path": "/users",
+        "port": "3000",
+        "host": "localhost",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      },
+      {
+        "method": "POST",
+        "path": "/users",
+        "port": "3000",
+        "host": "localhost",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "name": "Angel Beatty",
+          "email": "Odie.Klocko-Wuckert@yahoo.com"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/users/{id}",
+        "port": "3000",
+        "host": "localhost",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {}
+      }
+    ]
+  }
+}

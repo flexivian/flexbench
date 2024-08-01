@@ -13,7 +13,8 @@ async function parseOpenAPIDocument(openApiFilePath) {
                     summary: operation.summary || '',
                     description: operation.description || '',
                     parameters: operation.parameters || [],
-                    requestBody: operation.requestBody || null
+                    requestBody: operation.requestBody || null,
+                    responses: operation.responses || null
                 };
                 endpoints.push(endpoint);
             }

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
-const { faker } = require('@faker-js/faker');
+const { generateFakeField, generateFakeData } = require('./fake-data');
 
 async function generateCurlCommands(openApiFilePath, outputFilePath) {
     const endpoints = await parseOpenAPIDocument(openApiFilePath);
@@ -24,11 +24,11 @@ function createCurlCommand(endpoint) {
 
     endpoint.parameters.forEach(param => {
         if (param.in === 'query') {
-            params.push(`${param.name}=${faker.lorem.word()}`);
+            params.push(`${param.name}=${generateFakeField(param.name, param.schema)}`);
         } else if (param.in === 'header') {
-            headers.push(`-H "${param.name}: ${faker.lorem.word()}"`);
+            headers.push(`-H "${param.name}: ${generateFakeField(param.name, param.schema)}"`);
         } else if (param.in === 'path') {
-            url = url.replace(`\${${param.name}}`, faker.datatype.number({ min: 1, max: 1000 }));
+            url = url.replace(`\${${param.name}}`, generateFakeField(param.name, param.schema));
         }
     });
 
@@ -42,21 +42,6 @@ function createCurlCommand(endpoint) {
     return `curl -X ${method} "${url}${queryString}" ${headers.join(' ')} ${data}`.trim();
 }
 
-function generateFakeData(schema) {
-    const data = {};
-    if (schema && schema.properties) {
-        for (const [key, value] of Object.entries(schema.properties)) {
-            if (value.type === 'string') {
-                data[key] = faker.lorem.word();
-            } else if (value.type === 'integer') {
-                data[key] = faker.datatype.number({ min: 1, max: 1000 });
-            } else if (value.type === 'boolean') {
-                data[key] = faker.datatype.boolean();
-            }
-        }
-    }
-    return data;
-}
 
 module.exports = {
     generateCurlCommands

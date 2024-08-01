@@ -21,20 +21,28 @@ npm -v
 openapi-module/
 ├── config/
 │   ├── openapi-config.json
-│   ├── .gitignore
-│   └── README.md
-├── src/
-│   ├── parsers/
-│   │   └── openapi-parser.js
-│   ├── generators/
-│   │   ├── curl-generator.js
-│   │   └── flex-generator.js
+│   └── .gitignore
+├── sample/
+│   ├── mock-server.js
+│   └── sample-openapi.yaml
 ├── scripts/
 │   ├── generate-curl.js
 │   └── generate-flex.js
+├── src/
+│   ├── generators/
+│   │   ├── curl-generator.js
+│   │   ├── fake-data.js
+│   │   └── flex-generator.js
+│   └── parsers/
+│       └── openapi-parser.js
+├── temp/
+│   ├── curl-commands.sh
+│   └── flex-scenarios.flex
 └── test/
     └── placeholder.test.js
+package-lock.json
 package.json
+README.md
 ```
 
 ## Installation
@@ -53,14 +61,14 @@ npm install
 2. Update the file path in `scripts/generate-curl.js`.
 
 ```javascript
-const openApiFilePath = 'openapi-module/sample/openapi.yaml'; 
-const outputFilePath = './curl-commands.sh'; 
+const openApiFilePath = 'openapi-module/sample/sample-openapi.yaml'; 
+const outputFilePath = './temp/curl-commands.sh'; 
 ```
 
 3. Run the script to generate the cURL commands:
 
 ```sh
-node scripts/generate-curl.js
+npm run generate-curl -- --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/curl-commands.sh
 ```
 
 The generated cURL commands will be saved to `curl-commands.sh`.
@@ -71,18 +79,32 @@ The generated cURL commands will be saved to `curl-commands.sh`.
 2. Update the file path in `scripts/generate-flex.js`.
 
 ```javascript
-const openApiFilePath = 'openapi-module/sample/openapi.yaml'; 
-const outputDir = './flex-scenarios';
+const openApiFilePath = 'openapi-module/sample/sample-openapi.yaml'; 
+const outputDir = './temp/flex-scenarios';
 ```
 
 3. Run the script to generate the Flex scenarios:
 
 ```sh
-node scripts/generate-flex.js
+npm run generate-flex -- --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/flex-scenarios.json
 ```
+
 
 The generated Flex scenarios will be saved in the `flex-scenarios` directory.
 
+### To parse an OpenAPI document and generate both Flex scenarios and Curl-commands:
+1. Place your OpenAPI document (e.g., `openapi.yaml`) under the 'openapi-module/sample'.
+2. Update the file path in `main.js`.
+
+```javascript
+const openApiFilePath = './sample/modifythis.yaml'; 
+```
+
+3. Run the script to generate the Flex scenarios and Curl Commands:
+
+```sh
+npm run generate-all
+```
 
 ## Testing
 

@@ -1,17 +1,16 @@
 {
   "name": "openapi-module",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
+  "description": "A module to parse OpenAPI documents and generate test scenarios.",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "generate-curl": "node scripts/generate-curl.js",
+    "generate-flex": "node scripts/generate-flex.js",
+    "generate-all": "node main.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Yujun Liu",
+  "license": "MIT",
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.1.0",
     "@faker-js/faker": "^8.4.1",

@@ -1,6 +1,7 @@
 const { generateCurlCommands } = require('../src/generators/curl-generator');
+const args = process.argv.slice(2);
 
-const openApiFilePath = '../sample/sample-openapi.yaml'; 
-const outputFilePath = '../curl-commands.sh'; 
+const openApiFilePath = args.find(arg => arg.startsWith('--openApiFilePath=')).split('=')[1];
+const outputFilePath = args.find(arg => arg.startsWith('--outputFilePath=')).split('=')[1];
 
 generateCurlCommands(openApiFilePath, outputFilePath);
