@@ -57,15 +57,7 @@ npm install
 
 ### To parse an OpenAPI document and generate cURL commands:
 
-1. Place your OpenAPI document (e.g., `openapi.yaml`) under the 'openapi-module/sample'.
-2. Update the file path in `scripts/generate-curl.js`.
-
-```javascript
-const openApiFilePath = 'openapi-module/sample/sample-openapi.yaml'; 
-const outputFilePath = './temp/curl-commands.sh'; 
-```
-
-3. Run the script to generate the cURL commands:
+Run the script to generate the cURL commands:
 
 ```sh
 npm run generate-curl -- --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/curl-commands.sh
@@ -75,35 +67,21 @@ The generated cURL commands will be saved to `curl-commands.sh`.
 
 ### To parse an OpenAPI document and generate Flex scenarios:
 
-1. Place your OpenAPI document (e.g., `openapi.yaml`) under the 'openapi-module/sample'.
-2. Update the file path in `scripts/generate-flex.js`.
-
-```javascript
-const openApiFilePath = 'openapi-module/sample/sample-openapi.yaml'; 
-const outputDir = './temp/flex-scenarios';
-```
-
-3. Run the script to generate the Flex scenarios:
+Run the script to generate the Flex scenarios:
 
 ```sh
-npm run generate-flex -- --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/flex-scenarios.json
+npm run generate-flex --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/flex-scenarios.json
 ```
 
 
 The generated Flex scenarios will be saved in the `flex-scenarios` directory.
 
 ### To parse an OpenAPI document and generate both Flex scenarios and Curl-commands:
-1. Place your OpenAPI document (e.g., `openapi.yaml`) under the 'openapi-module/sample'.
-2. Update the file path in `main.js`.
 
-```javascript
-const openApiFilePath = './sample/modifythis.yaml'; 
-```
-
-3. Run the script to generate the Flex scenarios and Curl Commands:
+Run the script to generate the Flex scenarios and Curl Commands:
 
 ```sh
-npm run generate-all
+npm run generate-all --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml
 ```
 
 ## Testing

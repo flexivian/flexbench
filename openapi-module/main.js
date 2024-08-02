@@ -8,9 +8,10 @@ function runScript(script) {
     }
 }
 
-const openApiFilePath = './sample-openapi.yaml';
+const openApiFilePath = args.find(arg => arg.startsWith('--openApiFilePath=')).split('=')[1];
 const curlOutputFilePath = './temp/curl.commands.sh';
 const flexOutputFilePath = './temp/flex-scenarios.json';
+
 
 runScript(`npm run generate-curl -- --openApiFilePath=${openApiFilePath} --outputFilePath=${curlOutputFilePath}`);
 runScript(`npm run generate-flex -- --openApiFilePath=${openApiFilePath} --outputFilePath=${flexOutputFilePath}`);
