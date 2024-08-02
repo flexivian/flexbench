@@ -20,8 +20,6 @@ npm -v
 ```
 openapi-module/
 ├── config/
-│   ├── openapi-config.json
-│   └── .gitignore
 ├── sample/
 │   ├── mock-server.js
 │   └── sample-openapi.yaml
@@ -35,11 +33,13 @@ openapi-module/
 │   │   └── flex-generator.js
 │   └── parsers/
 │       └── openapi-parser.js
-├── temp/
+ temp/
 │   ├── curl-commands.sh
 │   └── flex-scenarios.flex
 └── test/
-    └── placeholder.test.js
+    └── parser.test.js
+.gitignore
+main.js
 package-lock.json
 package.json
 README.md
