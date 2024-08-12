@@ -60,7 +60,7 @@ npm install
 Run the script to generate the cURL commands:
 
 ```sh
-npm run generate-curl -- --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/curl-commands.sh
+npm run generate-curl --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/curl-commands.sh
 ```
 
 The generated cURL commands will be saved to `curl-commands.sh`.
