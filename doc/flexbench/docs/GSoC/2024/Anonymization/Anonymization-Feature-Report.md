@@ -1,6 +1,6 @@
 ## Introduction
 
-This report explores various techniques for anonymizing data such as Names, Emails, Tax numbers, Bank accounts, Phone numbers, Addresses(zip code, street, apt#, cities, countries)(s3)
+This report explores various techniques for anonymizing data such as Names, Emails, Tax numbers, Bank accounts, Phone numbers, Addresses(zip code, street, apt#, cities, countries)
 
 Anonymization Techniques
 
