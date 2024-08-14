@@ -88,10 +88,33 @@ If you want to uninstall just unlink it like this:
 npm unlink flexbench
 ```
 
+# How to turn on Anonymization Feature
+
+After you cloned your exmaple, at the top of the file, please import anonymizer.js from the repository:
+
+```
+var anonymizer = require('../lib/anonymizer');
+```
+
+And set the anonymizer into true to turn on anonymization for the HTTPS response:
+
+```
+anonymizer.setAnonymization(true);
+```
+
+If you want to use existing example file to copy and paste over, please go to example folder and find simple-request-anonymized.js
+
+You can always test the anonymization feature by running simple-request-anonymized.js:
+
+```
+node simple-request-anonymized.js
+```
+
 Features
 ========
 * Throttling
 * Clustering
+* Anonymizing
 * Set delay between requests
 * Random or consecutive generation of requests
 * Statistics aggregation
