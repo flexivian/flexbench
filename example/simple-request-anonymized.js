@@ -2,7 +2,8 @@
  * Scenario:
  * Generate requests towards specific domain
  **/
-var trafficSimulator = require('flexbench');
+var trafficSimulator = require('../lib/main');
+var anonymizer = require('../lib/anonymizer');
 
 
 function runTest() {
@@ -14,7 +15,7 @@ function runTest() {
     trafficSimulator.randomDelayBetweenRequests('0.5-1.1');
 
     //Anonymized 
-    trafficSimulator.anonymizeMode(true);
+    anonymizer.setAnonymization(true);
 
     trafficSimulator.setFunc('request', requestFunc);
 
