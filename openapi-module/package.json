@@ -6,7 +6,7 @@
   "scripts": {
     "generate-curl": "node scripts/generate-curl.js",
     "generate-flex": "node scripts/generate-flex.js",
-    "generate-all": "node main.js"
+    "generate-all": "node scripts/generate-all.js"
   },
   "keywords": [],
   "author": "Yujun Liu",

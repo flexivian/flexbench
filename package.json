@@ -6,6 +6,7 @@
   "dependencies": {
     "agentkeepalive": "^4.2.1",
     "express": "^4.17.3",
+    "openai": "^4.56.0",
     "throttle": "1.x"
   },
   "devDependencies": {

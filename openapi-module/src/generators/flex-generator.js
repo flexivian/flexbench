@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
-const { generateFakeData } = require('./fake-data');
+const { generateFakeField, generateFakeData } = require('./field-mapping');
 
 async function generateFlexScenarios(openApiFilePath, outputFilePath) {
     const endpoints = await parseOpenAPIDocument(openApiFilePath);
@@ -10,6 +10,8 @@ async function generateFlexScenarios(openApiFilePath, outputFilePath) {
         return;
     }
 
+    const requests = await Promise.all(endpoints.map(endpoint => createFlexRequest(endpoint)));
+    
     const scenarioConfig = {
         scenario: {
             delay: "0.5-1.5",
@@ -18,18 +20,18 @@ async function generateFlexScenarios(openApiFilePath, outputFilePath) {
             totalclients: "10",
             duration: "5"
         },
-        requests: endpoints.map(endpoint => createFlexRequest(endpoint))
+        requests: requests
     };
 
     fs.writeFileSync(outputFilePath, JSON.stringify({ scenarioConfig }, null, 2));
     console.log(`Flex scenarios generated and saved to ${outputFilePath}`);
 }
 
-function createFlexRequest(endpoint) {
+async function createFlexRequest(endpoint) {
     const request = {
         method: endpoint.method,
         path: endpoint.path,
-        port: "3000", 
+        port: "3000",  // Updated port to 3000
         host: "localhost",
         headers: {
             "Content-Type": "application/json"
@@ -39,7 +41,7 @@ function createFlexRequest(endpoint) {
 
     if (endpoint.method === 'POST' || endpoint.method === 'PUT' || endpoint.method === 'PATCH') {
         if (endpoint.requestBody && endpoint.requestBody.content['application/json']) {
-            request.body = generateFakeData(endpoint.requestBody.content['application/json'].schema);
+            request.body = await generateFakeData(endpoint.requestBody.content['application/json'].schema);
         }
     }
 

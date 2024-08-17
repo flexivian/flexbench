@@ -1,4 +1,6 @@
 const { faker } = require('@faker-js/faker');
+const { Configuration, OpenAIApi } = require('openai');
+const config = require('../GPT/Config');
 
 const fieldFakerMapping = {
     'name': () => faker.person.fullName(),
@@ -31,13 +33,22 @@ const fieldFakerMapping = {
     'boolean': () => faker.datatype.boolean()
 };
 
-function generateFakeField(key, value) {
+async function generateFakeField(key, value) {
     const lowerKey = key.toLowerCase();
+
+    // using gpt
+    if (config.useGPT) {
+        return await generateGPTData(key, value);
+    }
+
+    // usintg static approach
     for (const [field, fakerFunction] of Object.entries(fieldFakerMapping)) {
         if (lowerKey.includes(field)) {
             return fakerFunction();
         }
     }
+
+    // default
     if (value.type === 'string') {
         return faker.lorem.word();
     } else if (value.type === 'integer') {
@@ -65,11 +76,28 @@ function generateFakeField(key, value) {
     }
 }
 
-function generateFakeData(schema) {
+async function generateGPTData(key, value) {
+    const configuration = new Configuration({
+        apiKey: config.openaiApiKey,
+    });
+    const openai = new OpenAIApi(configuration);
+
+    const prompt = `Generate realistic ${value.type} data for ${key}`;
+
+    const response = await openai.createCompletion({
+        model: "text-davinci-003",  // change your model
+        prompt: prompt,
+        max_tokens: 10,  // **important configure**
+    });
+
+    return response.data.choices[0].text.trim();
+}
+
+async function generateFakeData(schema) {
     const data = {};
     if (schema && schema.properties) {
         for (const [key, value] of Object.entries(schema.properties)) {
-            data[key] = generateFakeField(key, value);
+            data[key] = await generateFakeField(key, value);
         }
     }
     return data;

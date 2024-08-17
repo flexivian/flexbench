@@ -60,7 +60,7 @@ npm install
 Run the script to generate the cURL commands:
 
 ```sh
-npm run generate-curl --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/curl-commands.sh
+npm run generate-curl -- --openApiFilePath=sample/'modify this to your OpenAPI file'.yaml --outputFilePath=temp/curl-commands.sh
 ```
 
 The generated cURL commands will be saved to `curl-commands.sh`.
@@ -70,18 +70,18 @@ The generated cURL commands will be saved to `curl-commands.sh`.
 Run the script to generate the Flex scenarios:
 
 ```sh
-npm run generate-flex --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml --outputFilePath=openapi-module/temp/flex-scenarios.json
+npm run generate-flex --  --openApiFilePath=sample/'modify this to your OpenAPI file'.yaml --outputFilePath=temp/flex-scenarios.json
 ```
 
 
 The generated Flex scenarios will be saved in the `flex-scenarios` directory.
 
-### To parse an OpenAPI document and generate both Flex scenarios and Curl-commands:
+### To parse an OpenAPI document and generate both cURL commands and Flex scenarios:
 
-Run the script to generate the Flex scenarios and Curl Commands:
+Run the script to generate both the cURL commands and Flex scenarios:
 
 ```sh
-npm run generate-all --openApiFilePath=openapi-module/sample/'modify this to your OpenAPI file'.yaml
+npm run generate-all -- --openApiFilePath=sample/your-openapi-file.yaml --curlOutputFilePath=temp/curl-commands.sh --flexOutputFilePath=temp/flex-scenarios.json
 ```
 
 ## Testing
