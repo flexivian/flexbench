@@ -62,13 +62,13 @@ var requestFunc = function () {
         options['headers'] = headers;
     }
     //you can use the provided request function from HTS, in order 'catch'/count all response codes in a stats object
-    var req = trafficSimulator.request(options, function (response, responseBody) {
+    var req = trafficSimulator.request(options, function (response) {
         console.log("Response: %s", response.statusCode);
-        response.setEncoding('utf8');
         response.on('data', function (chunk) {
-            console.log(chunk.length)
+            console.log(chunk.length);
+            console.log(chunk.toString());
         });
-        console.log("Response Body: %s", responseBody);
+
     });
 
     req.on('error', function (err) {
