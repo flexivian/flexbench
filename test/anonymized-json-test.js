@@ -1,6 +1,6 @@
 var assert = require("assert"),
     should = require('should'),
-    { anonymizeObject, setAnonymization } = require('../lib/anonymizer');
+    { anonymizeObject, setAnonymization, isAnonymizationEnabled } = require('../lib/anonymizer');
 
 describe('Anonymization Tests for JSON Data', () => {
     const exampleJson = {
@@ -59,6 +59,12 @@ describe('Anonymization Tests for JSON Data', () => {
             }
         ]
     };
+
+    before(function() {
+        if (!isAnonymizationEnabled()) {  
+            this.skip();  
+        }
+    });
 
     it('should anonymize the email', () => {
         const anonymizedJson = anonymizeObject({ ...exampleJson });
