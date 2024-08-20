@@ -6,9 +6,7 @@ var assert = require("assert"),
 describe('Anonymization Tests for Form Data', () => {
     
     before(function() {
-        if (!isAnonymizationEnabled()) {  
-            this.skip();  
-        }
+        setAnonymization(true)
     });
 
     it('should anonymize form data', (done) => {

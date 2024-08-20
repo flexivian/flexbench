@@ -61,9 +61,7 @@ describe('Anonymization Tests for JSON Data', () => {
     };
 
     before(function() {
-        if (!isAnonymizationEnabled()) {  
-            this.skip();  
-        }
+        setAnonymization(true)
     });
 
     it('should anonymize the email', () => {
