@@ -1,83 +1,59 @@
-const { Configuration, OpenAIApi } = require('openai');
-const fs = require('fs');
-const config = require('../GPT/Config');
+const OpenAI = require('openai');
+const fs = require('fs').promises;
+const path = require('path');
+const config = require('../GPT/config');
+const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
 
-async function generateFlexScenariosWithGPT(openApiFilePath, outputFilePath) {
-    const openApiData = await parseOpenApiFile(openApiFilePath);
-
-    if (!openApiData) {
-        console.error('Failed to parse OpenAPI document.');
-        return;
-    }
-
-    const prompt = createPromptFromOpenApi(openApiData);
-
-    const flexScenario = await generateScenarioFromGPT(prompt);
-
-    if (flexScenario) {
-        try {
-            fs.writeFileSync(outputFilePath, JSON.stringify(flexScenario, null, 2));
-            console.log(`Flex scenarios generated and saved to ${outputFilePath}`);
-        } catch (error) {
-            console.error('Failed to write Flex scenarios to file:', error);
-        }
-    } else {
-        console.error('Failed to generate Flex scenarios using GPT.');
-    }
-}
-
-async function parseOpenApiFile(openApiFilePath) {
+async function generateFlexScenariosWithGPT(openApiFilePath) {
     try {
-        const openApiDocument = fs.readFileSync(openApiFilePath, 'utf-8');
-        return JSON.parse(openApiDocument);
+        const endpoints = await parseOpenAPIDocument(openApiFilePath);
+        
+        if (!endpoints || endpoints.length === 0) {
+            console.error('Failed to parse OpenAPI document or no endpoints found.');
+            return;
+        }
+
+        const prompt = config.promptTemplate(endpoints);
+        const flexScenario = await generateScenarioFromGPT(prompt);
+
+        if (flexScenario) {
+            const outputDir = path.join(__dirname, config.outputDir); 
+            await ensureDirectoryExists(outputDir);
+
+            const outputFilePath = path.join(outputDir, config.outputFileName);
+            try {
+                await fs.writeFile(outputFilePath, JSON.stringify(flexScenario, null, 2));
+                console.log(`Flex scenarios generated and saved to ${outputFilePath}`);
+            } catch (error) {
+                console.error(`Failed to write Flex scenarios to file at ${outputFilePath}:`, error);
+            }
+        } else {
+            console.error('Failed to generate Flex scenarios using GPT.');
+        }
     } catch (error) {
-        console.error('Failed to read or parse the OpenAPI file:', error);
-        return null;
+        console.error('An unexpected error occurred during the Flex scenario generation:', error);
     }
-}
-
-function createPromptFromOpenApi(openApiData) {
-    const endpoints = Object.entries(openApiData.paths).map(([path, methods]) => {
-        return Object.entries(methods).map(([method, details]) => {
-            return {
-                method: method.toUpperCase(),
-                path: path,
-                summary: details.summary || 'No summary available',
-                parameters: details.parameters || [],
-                requestBody: details.requestBody ? details.requestBody.content['application/json'].schema : null
-            };
-        });
-    }).flat();
-
-    // customize the prompt according to your needs
-    const prompt = `
-    Based on the following API endpoints, generate a Flex scenario JSON file:
-    
-    ${JSON.stringify(endpoints, null, 2)}
-    
-    The Flex scenario JSON should include appropriate delay, throttling, workers, total clients, duration, method, path, headers, and realistic body data for POST/PUT requests.
-    `;
-
-    return prompt;
 }
 
 async function generateScenarioFromGPT(prompt) {
-    const configuration = new Configuration({
-        apiKey: config.openaiApiKey,
+    const openai = new OpenAI({
+        apiKey: config.openaiApiKey,  
     });
-    const openai = new OpenAIApi(configuration);
 
     try {
-        const response = await openai.createCompletion({
-            model: "text-davinci-003",
-            prompt: prompt,
-            max_tokens: 1500,  // Adjust based on the expected size of the response
-            temperature: 0.7,
+        const response = await openai.chat.completions.create({
+            model: config.model,  
+            messages: [{ role: "system", content: "You are a helpful assistant that generates Flexbench scenarios based on API endpoints. Please be creative" }, { role: "user", content: prompt }],
+            max_tokens: config.maxTokens, 
+            temperature: config.temperature, 
         });
 
-        const gptOutput = response.data.choices[0].text.trim();
+        let gptOutput = response.choices[0].message.content.trim();
 
-        // Attempt to parse the JSON output from GPT
+        if (gptOutput.startsWith('```') && gptOutput.endsWith('```')) {
+            gptOutput = gptOutput.split('\n').slice(1, -1).join('\n').trim();  // Remove code block markers
+        }
+
         try {
             return JSON.parse(gptOutput);
         } catch (parseError) {
@@ -86,8 +62,22 @@ async function generateScenarioFromGPT(prompt) {
             return null;
         }
     } catch (error) {
-        console.error('Failed to generate scenario with GPT:', error);
+        if (error instanceof OpenAI.APIError) {
+            console.error('OpenAI API error:', error.status, error.message, error.code, error.type);
+        } else {
+            console.error('Failed to generate scenario with GPT:', error);
+        }
         return null;
+    }
+}
+
+async function ensureDirectoryExists(dirPath) {
+    try {
+        await fs.mkdir(dirPath, { recursive: true });
+        console.log(`Directory created or already exists: ${dirPath}`);
+    } catch (error) {
+        console.error(`Failed to create directory at ${dirPath}:`, error);
+        throw error;
     }
 }
 

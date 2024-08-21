@@ -19,30 +19,35 @@ npm -v
 
 ```
 openapi-module/
-├── config/
+├── node_modules/
 ├── sample/
 │   ├── mock-server.js
 │   └── sample-openapi.yaml
 ├── scripts/
+│   ├── generate-all.js
 │   ├── generate-curl.js
 │   └── generate-flex.js
 ├── src/
 │   ├── generators/
 │   │   ├── curl-generator.js
-│   │   ├── fake-data.js
-│   │   └── flex-generator.js
+│   │   ├── field-mapping.js
+│   │   ├── flex-generator.js
+│   │   └── gpt-flex-generator.js
+│   ├── GPT/
+│   │   └── config.js
 │   └── parsers/
 │       └── openapi-parser.js
- temp/
+├── temp/
 │   ├── curl-commands.sh
-│   └── flex-scenarios.flex
-└── test/
-    └── parser.test.js
-.gitignore
-main.js
-package-lock.json
-package.json
-README.md
+│   ├── flex-scenario-gpt.json
+│   └── flex-scenarios.json
+├── test/
+│   ├── generators.test.js
+│   └── parser.test.js
+├── .gitignore
+├── package-lock.json
+├── package.json
+└── README.md
 ```
 
 ## Installation
@@ -54,6 +59,40 @@ npm install
 ```
 
 ## Usage
+
+### Before generate .flex file & curl-cmd for Flexbench by parsing your OpenAPI yaml:
+
+Please decide to generate scenarios by AI or static approach:
+
+Using static approach(Faker) - configurable template using faker to generate fake data for each schema and field
+
+Go to GPT/config: set useGPT into false
+
+Using AI approach(OpenAI API) - configurable template using GPT prompts to generate fake data for the .flex scenario
+
+Go to GPT/config: 
+1. set useGPT into true
+2. place your API key to config
+
+## Setting Up the API Key
+
+To securely use the API key in this project, it is recommended to set it as an environment variable. Follow the steps below to configure and use the API key:
+
+### Step 1: Obtain Your API Key
+
+If you don't already have an API key, you'll need to obtain one from the relevant service provider.
+
+### Step 2: Set the API Key as an Environment Variable
+
+1. **Linux/MacOS:**
+
+   Open your terminal and run the following command to add the API key to your shell configuration file (e.g., `.bashrc`, `.bash_profile`, `.zshrc`):
+
+   ```bash
+   export OPENAI_API_KEY='your-api-key-here'
+
+3. modify or customize your prompt for OpenAI model to generate personalized respond
+
 
 ### To parse an OpenAPI document and generate cURL commands:
 
@@ -73,7 +112,6 @@ Run the script to generate the Flex scenarios:
 npm run generate-flex --  --openApiFilePath=sample/'modify this to your OpenAPI file'.yaml --outputFilePath=temp/flex-scenarios.json
 ```
 
-
 The generated Flex scenarios will be saved in the `flex-scenarios` directory.
 
 ### To parse an OpenAPI document and generate both cURL commands and Flex scenarios:
@@ -89,9 +127,5 @@ npm run generate-all -- --openApiFilePath=sample/your-openapi-file.yaml --curlOu
 ### To run tests:
 
 ```
-cd openapi-module/test
-```
-
-```
-node placeholder.test.js
+npm test
 ```

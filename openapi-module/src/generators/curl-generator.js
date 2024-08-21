@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
 const { generateFakeField, generateFakeData } = require('./field-mapping');
+const querystring = require('querystring');
 
 async function generateCurlCommands(openApiFilePath, outputFilePath) {
     const endpoints = await parseOpenAPIDocument(openApiFilePath);
@@ -22,24 +23,49 @@ async function createCurlCommand(endpoint) {
     const params = [];
     let data = '';
 
-    for (const param of endpoint.parameters) {
-        if (param.in === 'query') {
-            params.push(`${param.name}=${await generateFakeField(param.name, param.schema)}`);
-        } else if (param.in === 'header') {
-            headers.push(`-H "${param.name}: ${await generateFakeField(param.name, param.schema)}"`);
-        } else if (param.in === 'path') {
-            url = url.replace(`\${${param.name}}`, await generateFakeField(param.name, param.schema));
+    try {
+       
+        for (const param of endpoint.parameters) {
+            if (param.in === 'query') {
+                params.push(`${param.name}=${querystring.escape(await generateFakeField(param.name, param.schema))}`);
+            } else if (param.in === 'header') {
+                headers.push(`-H "${param.name}: ${await generateFakeField(param.name, param.schema)}"`);
+            } else if (param.in === 'path') {
+                url = url.replace(`\${${param.name}}`, querystring.escape(await generateFakeField(param.name, param.schema)));
+            }
         }
-    }
 
-    if (method === 'POST' || method === 'PUT' || method === 'PATCH') {
-        if (endpoint.requestBody && endpoint.requestBody.content['application/json']) {
-            data = `-d '${JSON.stringify(await generateFakeData(endpoint.requestBody.content['application/json'].schema))}'`;
+       
+        if (['POST', 'PUT', 'PATCH'].includes(method)) {
+            if (endpoint.requestBody) {
+                if (endpoint.requestBody.content) {
+                    const contentType = Object.keys(endpoint.requestBody.content)[0];
+                    headers.push(`-H "Content-Type: ${contentType}"`);
+
+                    if (contentType === 'application/json') {
+                        const fakeData = await generateFakeData(endpoint.requestBody.content[contentType].schema);
+                        data = `-d '${JSON.stringify(fakeData)}'`;
+                    } else if (contentType === 'application/x-www-form-urlencoded') {
+                        const formData = await generateFakeData(endpoint.requestBody.content[contentType].schema);
+                        data = `-d '${querystring.stringify(formData)}'`;
+                    } else {
+                        console.warn(`Unsupported content type: ${contentType}`);
+                    }
+                } else if (endpoint.requestBody.type) {
+                 
+                    headers.push(`-H "Content-Type: application/json"`);
+                    const fakeData = await generateFakeData(endpoint.requestBody);
+                    data = `-d '${JSON.stringify(fakeData)}'`;
+                }
+            }
         }
-    }
 
-    const queryString = params.length ? `?${params.join('&')}` : '';
-    return `curl -X ${method} "${url}${queryString}" ${headers.join(' ')} ${data}`.trim();
+        const queryString = params.length ? `?${params.join('&')}` : '';
+        return `curl -X ${method} "${url}${queryString}" ${headers.join(' ')} ${data}`.trim();
+    } catch (error) {
+        console.error(`Error generating cURL command for endpoint ${method} ${url}:`, error);
+        return '';
+    }
 }
 
 module.exports = {

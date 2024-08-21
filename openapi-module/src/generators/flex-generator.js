@@ -31,7 +31,7 @@ async function createFlexRequest(endpoint) {
     const request = {
         method: endpoint.method,
         path: endpoint.path,
-        port: "3000",  // Updated port to 3000
+        port: "3000",  
         host: "localhost",
         headers: {
             "Content-Type": "application/json"
@@ -39,12 +39,15 @@ async function createFlexRequest(endpoint) {
         body: {}
     };
 
-    if (endpoint.method === 'POST' || endpoint.method === 'PUT' || endpoint.method === 'PATCH') {
-        if (endpoint.requestBody && endpoint.requestBody.content['application/json']) {
-            request.body = await generateFakeData(endpoint.requestBody.content['application/json'].schema);
+    if (['POST', 'PUT', 'PATCH'].includes(endpoint.method)) {
+        if (endpoint.requestBody && endpoint.requestBody.properties) {
+            console.log(`Generating data for POST body with schema: ${JSON.stringify(endpoint.requestBody.properties, null, 2)}`);
+            request.body = await generateFakeData(endpoint.requestBody);
+            console.log(`Generated POST body: ${JSON.stringify(request.body, null, 2)}`);
+        } else {
+            console.log('No schema found for POST request body.');
         }
     }
-
     return request;
 }
 
