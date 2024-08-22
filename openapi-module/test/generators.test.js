@@ -4,6 +4,7 @@ const { generateFlexScenariosWithGPT } = require('../src/generators/gpt-flex-gen
 const { generateFlexScenarios } = require('../src/generators/flex-generator');
 const { generateCurlCommands } = require('../src/generators/curl-generator');
 const config = require('../src/GPT/config');
+const port = 4000;
 
 async function testStaticFlexGenerator() {
     const openApiFilePath = path.resolve(__dirname, '../sample/sample-openapi.yaml');
@@ -60,7 +61,7 @@ async function testCurlCommandGenerator() {
         console.log("Generated cURL commands:");
         console.log(outputData);
 
-        if (outputData.includes('curl -X POST "http://localhost:3000/users" -H "Content-Type: application/json" -d')) {
+        if (outputData.includes(`curl -X POST "http://localhost:${port}/users" -H "Content-Type: application/json" -d`)) {
             console.log("cURL Command Generator Test Passed");
         } else {
             console.error("cURL Command Generator Test Failed: Incorrect cURL command generated");

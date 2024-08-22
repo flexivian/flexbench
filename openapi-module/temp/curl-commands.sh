@@ -1,5 +1,5 @@
-curl -X GET "http://localhost:3000/users?limit=557"
+curl -X GET "http://localhost:4000/users?limit=602"
 
-curl -X POST "http://localhost:3000/users" -H "Content-Type: application/json" -d '{"name":"Tiffany Conn","email":"Miguel_Cremin-Wisoky@yahoo.com"}'
+curl -X POST "http://localhost:4000/users" -H "Content-Type: application/json" -d '{"name":"Orlando Crooks I","email":"Wilmer.Buckridge15@hotmail.com"}'
 
-curl -X GET "http://localhost:3000/users/681"
+curl -X GET "http://localhost:4000/users/238"

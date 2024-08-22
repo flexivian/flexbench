@@ -2,6 +2,7 @@ const fs = require('fs');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
 const { generateFakeField, generateFakeData } = require('./field-mapping');
 const querystring = require('querystring');
+const port = 4000;
 
 async function generateCurlCommands(openApiFilePath, outputFilePath) {
     const endpoints = await parseOpenAPIDocument(openApiFilePath);
@@ -17,7 +18,7 @@ async function generateCurlCommands(openApiFilePath, outputFilePath) {
 }
 
 async function createCurlCommand(endpoint) {
-    let url = `http://localhost:3000${endpoint.path.replace(/{(.*?)}/g, (_, key) => `\${${key}}`)}`;
+    let url = `http://localhost:${port}${endpoint.path.replace(/{(.*?)}/g, (_, key) => `\${${key}}`)}`;
     const method = endpoint.method;
     const headers = [];
     const params = [];

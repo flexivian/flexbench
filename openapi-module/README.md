@@ -72,7 +72,6 @@ Using AI approach(OpenAI API) - configurable template using GPT prompts to gener
 
 Go to GPT/config: 
 1. set useGPT into true
-2. place your API key to config
 
 ## Setting Up the API Key
 
@@ -84,14 +83,14 @@ If you don't already have an API key, you'll need to obtain one from the relevan
 
 ### Step 2: Set the API Key as an Environment Variable
 
-1. **Linux/MacOS:**
+**Linux/MacOS:**
 
    Open your terminal and run the following command to add the API key to your shell configuration file (e.g., `.bashrc`, `.bash_profile`, `.zshrc`):
 
-   ```bash
+  ```bash
    export OPENAI_API_KEY='your-api-key-here'
-
-3. modify or customize your prompt for OpenAI model to generate personalized respond
+  ```
+2. modify or customize your prompt for OpenAI model to generate personalized respond
 
 
 ### To parse an OpenAPI document and generate cURL commands:
@@ -99,8 +98,10 @@ If you don't already have an API key, you'll need to obtain one from the relevan
 Run the script to generate the cURL commands:
 
 ```sh
-npm run generate-curl -- --openApiFilePath=sample/'modify this to your OpenAPI file'.yaml --outputFilePath=temp/curl-commands.sh
+npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=temp/curl-commands.sh
 ```
+
+you can use your own openapi config file instead of sample-openapi.yml.
 
 The generated cURL commands will be saved to `curl-commands.sh`.
 
@@ -109,8 +110,10 @@ The generated cURL commands will be saved to `curl-commands.sh`.
 Run the script to generate the Flex scenarios:
 
 ```sh
-npm run generate-flex --  --openApiFilePath=sample/'modify this to your OpenAPI file'.yaml --outputFilePath=temp/flex-scenarios.json
+npm run generate-flex --  --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=temp/flex-scenarios.json
 ```
+
+you can use your own openapi config file instead of sample-openapi.yml.
 
 The generated Flex scenarios will be saved in the `flex-scenarios` directory.
 
@@ -119,8 +122,15 @@ The generated Flex scenarios will be saved in the `flex-scenarios` directory.
 Run the script to generate both the cURL commands and Flex scenarios:
 
 ```sh
-npm run generate-all -- --openApiFilePath=sample/your-openapi-file.yaml --curlOutputFilePath=temp/curl-commands.sh --flexOutputFilePath=temp/flex-scenarios.json
+npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --curlOutputFilePath=temp/curl-commands.sh --flexOutputFilePath=temp/flex-scenarios.json
 ```
+
+you can use your own openapi config file instead of sample-openapi.yml.
+
+## To Use generated .flex and cURL: 
+
+a. run prism to run the mock server
+b. use the flex file through Flexbench desktop app and load and run it
 
 ## Testing
 

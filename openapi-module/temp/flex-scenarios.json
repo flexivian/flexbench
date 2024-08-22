@@ -11,7 +11,7 @@
       {
         "method": "GET",
         "path": "/users",
-        "port": "3000",
+        "port": "4000",
         "host": "localhost",
         "headers": {
           "Content-Type": "application/json"
@@ -21,20 +21,20 @@
       {
         "method": "POST",
         "path": "/users",
-        "port": "3000",
+        "port": "4000",
         "host": "localhost",
         "headers": {
           "Content-Type": "application/json"
         },
         "body": {
-          "name": "Brad Kris",
-          "email": "Yadira_Considine@gmail.com"
+          "name": "Timmy Nader",
+          "email": "Rickie18@hotmail.com"
         }
       },
       {
         "method": "GET",
         "path": "/users/{id}",
-        "port": "3000",
+        "port": "4000",
         "host": "localhost",
         "headers": {
           "Content-Type": "application/json"

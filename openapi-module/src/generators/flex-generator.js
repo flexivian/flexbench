@@ -1,6 +1,7 @@
 const fs = require('fs');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
 const { generateFakeField, generateFakeData } = require('./field-mapping');
+const port = 4000;
 
 async function generateFlexScenarios(openApiFilePath, outputFilePath) {
     const endpoints = await parseOpenAPIDocument(openApiFilePath);
@@ -31,7 +32,7 @@ async function createFlexRequest(endpoint) {
     const request = {
         method: endpoint.method,
         path: endpoint.path,
-        port: "3000",  
+        port: `${port}`,  
         host: "localhost",
         headers: {
             "Content-Type": "application/json"

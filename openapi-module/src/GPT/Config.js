@@ -23,7 +23,7 @@ module.exports = {
         - Each request should include:
           - "method": The HTTP method.
           - "path": The API path, with placeholders like "{id}" where necessary.
-          - "port": Use "3000" as the default port.
+          - "port": Use "4000" as the default port.
           - "host": Use "localhost" as the default host.
           - "headers": Include "Content-Type: application/json".
           - "body": Realistic example data based on the request body schema.
@@ -44,7 +44,7 @@ module.exports = {
               {
                 "method": "GET",
                 "path": "/users",
-                "port": "3000",
+                "port": "4000",
                 "host": "localhost",
                 "headers": {
                   "Content-Type": "application/json"
@@ -54,7 +54,7 @@ module.exports = {
               {
                 "method": "POST",
                 "path": "/users",
-                "port": "3000",
+                "port": "4000",
                 "host": "localhost",
                 "headers": {
                   "Content-Type": "application/json"
@@ -67,7 +67,7 @@ module.exports = {
               {
                 "method": "GET",
                 "path": "/users/{id}",
-                "port": "3000",
+                "port": "4000",
                 "host": "localhost",
                 "headers": {
                   "Content-Type": "application/json"
