@@ -88,10 +88,27 @@ If you want to uninstall just unlink it like this:
 npm unlink flexbench
 ```
 
+# How to turn on Anonymization Feature
+
+After you cloned your exmaple, set the anonymize mode into true to turn on anonymization for the HTTPS response:
+
+```
+trafficSimulator.setAnonymization(true);
+```
+
+If you want to use existing example file to copy and paste over, please go to example folder and find simple-request-anonymized.js
+
+You can always test the anonymization feature by running simple-request-anonymized.js:
+
+```
+node simple-request-anonymized.js
+```
+
 Features
 ========
 * Throttling
 * Clustering
+* Anonymizing
 * Set delay between requests
 * Random or consecutive generation of requests
 * Statistics aggregation
