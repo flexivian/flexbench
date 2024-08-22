@@ -128,7 +128,10 @@ you can use your own openapi config file instead of sample-openapi.yml.
 1. run prism to run the mock server
 
 ```
-npm install -g @stoplight/prism-cli prism mock sample-openapi.yaml -p 4000
+npm install -g @stoplight/prism-cli 
+```
+```
+prism mock sample-openapi.yaml -p 4000
 ```
 you can use your own openapi config file instead of sample-openapi.yml.
 

@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
 const { generateFakeField, generateFakeData } = require('./field-mapping');
 const querystring = require('querystring');
@@ -11,6 +12,9 @@ async function generateCurlCommands(openApiFilePath, outputFilePath) {
         console.error('Failed to parse OpenAPI document.');
         return;
     }
+
+    const outputDir = path.dirname(outputFilePath);
+    ensureDirectoryExists(outputDir);
 
     const commands = (await Promise.all(endpoints.map(endpoint => createCurlCommand(endpoint)))).join('\n\n');
     fs.writeFileSync(outputFilePath, commands);
@@ -25,7 +29,6 @@ async function createCurlCommand(endpoint) {
     let data = '';
 
     try {
-       
         for (const param of endpoint.parameters) {
             if (param.in === 'query') {
                 params.push(`${param.name}=${querystring.escape(await generateFakeField(param.name, param.schema))}`);
@@ -36,7 +39,6 @@ async function createCurlCommand(endpoint) {
             }
         }
 
-       
         if (['POST', 'PUT', 'PATCH'].includes(method)) {
             if (endpoint.requestBody) {
                 if (endpoint.requestBody.content) {
@@ -53,7 +55,6 @@ async function createCurlCommand(endpoint) {
                         console.warn(`Unsupported content type: ${contentType}`);
                     }
                 } else if (endpoint.requestBody.type) {
-                 
                     headers.push(`-H "Content-Type: application/json"`);
                     const fakeData = await generateFakeData(endpoint.requestBody);
                     data = `-d '${JSON.stringify(fakeData)}'`;
@@ -66,6 +67,13 @@ async function createCurlCommand(endpoint) {
     } catch (error) {
         console.error(`Error generating cURL command for endpoint ${method} ${url}:`, error);
         return '';
+    }
+}
+
+function ensureDirectoryExists(dirPath) {
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+        console.log(`Directory created: ${dirPath}`);
     }
 }
 

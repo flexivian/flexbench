@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
 const { generateFakeField, generateFakeData } = require('./field-mapping');
 const port = 4000;
@@ -10,6 +11,9 @@ async function generateFlexScenarios(openApiFilePath, outputFilePath) {
         console.error('Failed to parse OpenAPI document.');
         return;
     }
+
+    const outputDir = path.dirname(outputFilePath);
+    ensureDirectoryExists(outputDir);
 
     const requests = await Promise.all(endpoints.map(endpoint => createFlexRequest(endpoint)));
     
@@ -50,6 +54,13 @@ async function createFlexRequest(endpoint) {
         }
     }
     return request;
+}
+
+function ensureDirectoryExists(dirPath) {
+    if (!fs.existsSync(dirPath)) {
+        fs.mkdirSync(dirPath, { recursive: true });
+        console.log(`Directory created: ${dirPath}`);
+    }
 }
 
 module.exports = {

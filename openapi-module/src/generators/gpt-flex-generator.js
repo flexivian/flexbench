@@ -43,7 +43,10 @@ async function generateScenarioFromGPT(prompt) {
     try {
         const response = await openai.chat.completions.create({
             model: config.model,  
-            messages: [{ role: "system", content: "You are a helpful assistant that generates Flexbench scenarios based on API endpoints. Please be creative" }, { role: "user", content: prompt }],
+            messages: [
+                { role: "system", content: "You are a helpful assistant that generates Flexbench scenarios based on API endpoints. Please be creative" },
+                { role: "user", content: prompt }
+            ],
             max_tokens: config.maxTokens, 
             temperature: config.temperature, 
         });
@@ -51,7 +54,7 @@ async function generateScenarioFromGPT(prompt) {
         let gptOutput = response.choices[0].message.content.trim();
 
         if (gptOutput.startsWith('```') && gptOutput.endsWith('```')) {
-            gptOutput = gptOutput.split('\n').slice(1, -1).join('\n').trim();  // Remove code block markers
+            gptOutput = gptOutput.split('\n').slice(1, -1).join('\n').trim();  
         }
 
         try {
