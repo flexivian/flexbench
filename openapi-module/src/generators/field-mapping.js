@@ -1,9 +1,10 @@
 const { faker } = require('@faker-js/faker');
+const config = require('../GPT/config');  // Import the config file to access the consumer setting
 
 const fieldFakerMapping = {
     'name': () => faker.person.fullName(),
     'email': () => faker.internet.email(),
-    'phone': () => faker.phone.phoneNumber(),
+    'phone': () => faker.phone.number(),
     'address': () => faker.location.streetAddress(),
     'city': () => faker.location.city(),
     'state': () => faker.location.state(),
@@ -11,7 +12,7 @@ const fieldFakerMapping = {
     'zip': () => faker.location.zipCode(),
     'date': () => faker.date.recent().toISOString(),
     'time': () => faker.date.recent().toISOString(),
-    'company': () => faker.company.companyName(),
+    'company': () => faker.company.name(),
     'product': () => faker.commerce.productName(),
     'price': () => faker.commerce.price(),
     'transaction': () => faker.finance.transactionDescription(),
@@ -27,21 +28,21 @@ const fieldFakerMapping = {
     'ipv6': () => faker.internet.ipv6(),
     'uuid': () => faker.string.uuid(),
     'text': () => faker.lorem.text(),
-    'number': () => faker.number.int({max: 1000}),
+    'number': () => faker.number.int({ max: 1000 }),
     'boolean': () => faker.datatype.boolean()
 };
 
 async function generateFakeField(key, value) {
     const lowerKey = key.toLowerCase();
 
-    // usintg static approach
+    // Use static approach based on field mapping
     for (const [field, fakerFunction] of Object.entries(fieldFakerMapping)) {
         if (lowerKey.includes(field)) {
             return fakerFunction();
         }
     }
 
-    // default
+    // Default handling if no match in field mapping
     if (value.type === 'string') {
         return faker.lorem.word();
     } else if (value.type === 'integer') {
@@ -49,9 +50,9 @@ async function generateFakeField(key, value) {
     } else if (value.type === 'boolean') {
         return faker.datatype.boolean();
     } else if (value.type === 'object') {
-        return generateFakeData(value);
+        return await generateFakeData(value);
     } else if (value.type === 'array' && value.items) {
-        return [generateFakeField(key, value.items)];
+        return [await generateFakeField(key, value.items)];
     } else if (value.format === 'date-time') {
         return faker.date.recent().toISOString();
     } else if (value.format === 'uuid') {

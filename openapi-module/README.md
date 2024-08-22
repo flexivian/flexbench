@@ -88,6 +88,12 @@ If you don't already have an API key, you'll need to obtain one from the relevan
   ```
 2. modify or customize your prompt for OpenAI model to generate personalized respond
 
+## Setting Up the consumer for generated file:
+
+Go to GPT/config: set consumer into 'desktop-app' / 'server-app'
+
+'desktop-app': generate desktop app consumable format JSON .flex file that allow you to import and run
+'server-app': generate server app consumable format JSON .flex file that you need to open it and copy the json over to postman for server-app testing purpose.
 
 ### To parse an OpenAPI document and generate cURL commands:
 
