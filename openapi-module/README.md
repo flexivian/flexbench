@@ -21,7 +21,6 @@ npm -v
 openapi-module/
 ├── node_modules/
 ├── sample/
-│   ├── mock-server.js
 │   └── sample-openapi.yaml
 ├── scripts/
 │   ├── generate-all.js
@@ -37,10 +36,7 @@ openapi-module/
 │   │   └── config.js
 │   └── parsers/
 │       └── openapi-parser.js
-├── temp/
-│   ├── curl-commands.sh
-│   ├── flex-scenario-gpt.json
-│   └── flex-scenarios.json
+├── temp/(generated files would be save under this folder)
 ├── test/
 │   ├── generators.test.js
 │   └── parser.test.js
@@ -129,8 +125,14 @@ you can use your own openapi config file instead of sample-openapi.yml.
 
 ## To Use generated .flex and cURL: 
 
-a. run prism to run the mock server
-b. use the flex file through Flexbench desktop app and load and run it
+1. run prism to run the mock server
+
+```
+npm install -g @stoplight/prism-cli prism mock sample-openapi.yaml -p 4000
+```
+you can use your own openapi config file instead of sample-openapi.yml.
+
+2. use the flex file through Flexbench desktop app and load and run it
 
 ## Testing
 

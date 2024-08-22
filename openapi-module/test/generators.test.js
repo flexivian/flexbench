@@ -6,6 +6,14 @@ const { generateCurlCommands } = require('../src/generators/curl-generator');
 const config = require('../src/GPT/config');
 const port = 4000;
 
+async function ensureTempDirectoryExists() {
+    const tempDir = path.resolve(__dirname, '../temp');
+    if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir);
+        console.log(`Created 'temp' directory at ${tempDir}`);
+    }
+}
+
 async function testStaticFlexGenerator() {
     const openApiFilePath = path.resolve(__dirname, '../sample/sample-openapi.yaml');
     const outputFilePath = path.resolve(__dirname, '../temp/flex-scenarios.json');
@@ -72,6 +80,8 @@ async function testCurlCommandGenerator() {
 }
 
 async function runTests() {
+    await ensureTempDirectoryExists();
+
     if (!config.useGPT) {
         console.log("Running tests with static data generation...");
         await testStaticFlexGenerator();
