@@ -170,23 +170,63 @@ async function generateTestScenariosFromOpenApi(openApiDocPath) {
         }
     }
 }
+```
 
-// Example usage
-generateTestScenariosFromOpenApi('./openapi.yaml').catch((error) => {
-    console.error('Error generating scenarios:', error);
+### Using Prism to Run a Mock Server Based on OpenAPI
+
+**Prism** is a versatile tool that can serve as a mock server, validating and serving responses based on your OpenAPI documents. Here’s how you can set up and use Prism to run a mock server for your API:
+
+### 1. Install Prism
+
+First, you need to install Prism globally on your system:
+
+```bash
+npm install -g @stoplight/prism-cli
+```
+
+### 2. Run a Mock Server
+
+Once Prism is installed, you can use it to run a mock server based on your OpenAPI document:
+
+```bash
+prism mock path/to/your/openapi.yaml
+```
+
+### 3. Test Your Mock Server
+
+After the mock server is running, you can test it using `curl` commands, Postman, or by generating requests from your scripts.
+
+### Example Usage in Your Project
+
+Here’s an example of how to integrate Prism into your testing workflow:
+
+**Start the Prism Mock Server**
+
+You can start Prism in your Node.js script before running your tests. Ensure that Prism is pointed to your OpenAPI document:
+
+```bash
+prism mock path/to/your/openapi.yaml
+```
+
+Or, if you prefer to include this in your test automation, use:
+
+```javascript
+const { exec } = require('child_process');
+
+exec('prism mock path/to/your/openapi.yaml', (err, stdout, stderr) => {
+  if (err) {
+    console.error(`Error starting Prism: ${stderr}`);
+    return;
+  }
+  console.log(`Prism started: ${stdout}`);
+  
+  // After starting Prism, you can run your tests here
 });
 ```
 
-### 4. Set Up Your Environment
-Make sure to set up your environment by adding your OpenAI API key:
+When running tests:
 
-```bash
-export OPENAI_API_KEY="your-openai-api-key"
-```
+- Start the Prism mock server.
+- Run your tests against the mock server.
+- Shut down Prism after tests complete.
 
-### 5. Run the Module
-Run your module to generate realistic test data for your API endpoints.
-
-```bash
-node openApiModule.js
-```
