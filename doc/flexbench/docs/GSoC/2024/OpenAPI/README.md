@@ -9,36 +9,37 @@ This module provides functionalities to parse OpenAPI documents and generate tes
 
 ```
 openapi-module/
-├── config/
+├── node_modules/
 ├── sample/
-│   ├── mock-server.js
 │   └── sample-openapi.yaml
 ├── scripts/
+│   ├── generate-all.js
 │   ├── generate-curl.js
 │   └── generate-flex.js
 ├── src/
 │   ├── generators/
 │   │   ├── curl-generator.js
-│   │   ├── fake-data.js
-│   │   └── flex-generator.js
+│   │   ├── field-mapping.js
+│   │   ├── flex-generator.js
+│   │   └── gpt-flex-generator.js
+│   ├── GPT/
+│   │   └── config.js
 │   └── parsers/
 │       └── openapi-parser.js
- temp/
-│   ├── curl-commands.sh
-│   └── flex-scenarios.flex
-└── test/
-    └── parser.test.js
-.gitignore
-main.js
-package-lock.json
-package.json
-README.md
+├── temp/(generated files would be save under this folder)
+├── test/
+│   ├── generators.test.js
+│   └── parser.test.js
+├── .gitignore
+├── package-lock.json
+├── package.json
+└── README.md
 ```
 
 **Features**:
 - Parse, validate, and dereference JSON/YAML schemas.
 - Resolve references (`$ref`) and bundle schemas.
-
+- Generate realisitc data based on parsed OpenAPI endpoints by using ML/Static approach
 
 ## Installation
 
