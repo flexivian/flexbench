@@ -5,6 +5,27 @@
 
 This module provides functionalities to parse OpenAPI documents and generate test scenarios for Flexbench.
 
+## Usage Guide
+
+To use this module, you need to provide an OpenAPI YAML file that contains basic endpoints. This file will be used by Prism to run a mock server.
+
+### Configuration
+
+1. **OpenAPI YAML File**: Ensure that your OpenAPI YAML file includes the necessary endpoints that can be used by Prism for mock server operations.
+
+2. **AI Model Integration (Optional)**: If you want to leverage AI models to generate Flex scenarios with customized prompts, configure the settings in `GPT/config.js`. This will enable the use of GPT-based data generation for more dynamic and realistic testing scenarios.
+
+### Script Usage
+
+- **Generating cURL Commands and Flex Scenarios**: 
+  - Use the provided scripts to generate `.flex` files and cURL commands.
+  - These scripts will utilize `parser.js` to parse your OpenAPI YAML file, extracting endpoints and generating the necessary Flex scenarios and cURL commands based on the parsed data.
+
+- **Running Tests with Flexbench**:
+  - Copy the generated cURL commands and Flex scenarios into your test setup.
+  - Use these files to run tests with the Flexbench server application.
+  - Ensure that Prism is running the mock server as specified by your OpenAPI YAML file.
+
 ## File Involved
 
 ```
