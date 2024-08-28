@@ -99,14 +99,43 @@ let anonymizationEnabled = true;
 
 The anonymization process can be enabled or disabled using the following functions:
 
+Standalone Script:
+
+When you creating your script utilizing Flexbench, by importing flexbench, set the anonymization feature via core library
+
 ```javascript
-const anonymizer = require('anonymizer');
+const trafficSimulator = require('flexbench');
 
 // Enable anonymization
-anonymizer.setAnonymization(true);
+trafficSimulator.setAnonymization(true);
 
 // Check if anonymization is enabled
-console.log(anonymizer.isAnonymizationEnabled()); // true
+console.log(trafficSimulator.isAnonymizationEnabled()); // true
+```
+Server-app:
+
+Go to server-app/tests/
+
+Add code below to both multi-requests.js & simple-request.js
+
+```javascript
+// Enable anonymization
+trafficSimulator.setAnonymization(true);
+//above start
+ trafficSimulator.start(threadId);
+```
+
+desktop-app:
+
+Go to desktop-app/tests/
+
+Add code below to both multi-requests.js & simple-request.js
+
+```javascript
+// Enable anonymization
+trafficSimulator.setAnonymization(true);
+//above start
+ trafficSimulator.start(threadId);
 ```
 
 ### Anonymizing Different Data Formats
