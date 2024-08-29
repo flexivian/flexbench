@@ -1,11 +1,13 @@
 const path = require('path');
 const { generateFlexScenariosWithGPT } = require('../src/generators/gpt-flex-generator');
 const { generateFlexScenarios } = require('../src/generators/flex-generator');
-const config = require('../src/GPT/config'); 
+const config = require('../src/GPT/config');
 const args = process.argv.slice(2);
 
 const openApiFilePathArg = args.find(arg => arg.startsWith('--openApiFilePath='));
 const outputFilePathArg = args.find(arg => arg.startsWith('--outputFilePath='));
+const useGPTArg = args.find(arg => arg.startsWith('--useGPT='));
+const gptOutputFilenameArg = args.find(arg => arg.startsWith('--gptOutputFilename='));
 
 if (!openApiFilePathArg || !outputFilePathArg) {
     console.error("Error: Missing required arguments. Please provide --openApiFilePath and --outputFilePath.");
@@ -14,6 +16,14 @@ if (!openApiFilePathArg || !outputFilePathArg) {
 
 const openApiFilePath = openApiFilePathArg.split('=')[1];
 const outputFilePath = outputFilePathArg.split('=')[1];
+
+if (useGPTArg) {
+    config.useGPT = useGPTArg.split('=')[1].toLowerCase() === 'true';
+}
+
+if (gptOutputFilenameArg) {
+    config.outputFileName = gptOutputFilenameArg.split('=')[1];
+}
 
 if (config.useGPT) {
     generateFlexScenariosWithGPT(openApiFilePath, outputFilePath)
