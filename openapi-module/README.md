@@ -61,24 +61,17 @@ You need to decide whether to generate scenarios using AI or a static approach:
 
 #### Using the Static Approach (Faker)
 
-- This approach uses configurable templates with Faker to generate fake data for each schema and field.
-- To use this method, go to `src/GPT/config.js` and set `useGPT` to `false`.
+1. This approach uses configurable templates with Faker to generate fake data for each schema and field.
+2. To use this method, go to `src/GPT/config.js` and set `useGPT` to `false`.
 
 #### Using the AI Approach (OpenAI API)
 
-- This approach uses configurable templates with GPT prompts to generate fake data for the .flex scenarios.
-- To use this method, go to `src/GPT/config.js` and set `useGPT` to `true`.
-- Modify or customize your prompt for the OpenAI model to generate personalized responses.
-
-## Setting Up the API Key
-
-To securely use the API key in this project, it is recommended to set it as an environment variable. Follow the steps below:
-
-### Step 1: Obtain Your API Key
-
-If you don't already have an API key, obtain one from the relevant service provider.
-
-### Step 2: Set the API Key as an Environment Variable
+1. This approach uses configurable templates with GPT prompts to generate fake data for the .flex scenarios.
+2. To use this method, go to `src/GPT/config.js` and set `useGPT` to `true`.
+3. Modify or customize your prompt for the OpenAI model to generate personalized responses.
+4. Setting Up the API Key: To securely use the API key in this project, it is recommended to set it as an environment variable. Follow the steps below:
+5. Obtain Your API Key: If you don't already have an API key, obtain one from the relevant service provider.
+6. Set the API Key as an Environment Variable
 
 **Linux/MacOS:**
 
@@ -88,12 +81,12 @@ If you don't already have an API key, obtain one from the relevant service provi
    export OPENAI_API_KEY='your-api-key-here'
   ```
 
-## Setting Up the Consumer for Generated Files:
-
-Go to `src/GPT/config.js` and set the `consumer` value to either `'desktop-app'` or `'server-app'`:
+7. Setting Up the Consumer for Generated Files: Go to `src/GPT/config.js` and set the `consumer` value to either `'desktop-app'` or `'server-app'`:
 
 - **'desktop-app'**: Generates a desktop app consumable format JSON .flex file that you can import and run.
 - **'server-app'**: Generates a server app consumable format JSON .flex file, which you need to open and copy the JSON over to Postman for server-app testing.
+
+8. Run scripts
 
 ## Running the Scripts
 
