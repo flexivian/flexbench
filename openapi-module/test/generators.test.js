@@ -26,14 +26,14 @@ async function testStaticFlexGenerator() {
         const jsonData = JSON.parse(outputData);
 
         if (config.consumer === 'desktop-app') {
-            // Validate for desktop-app structure
+            //desktop-app structure
             if (jsonData.project && jsonData.scenarios && jsonData.scenarios.length > 0) {
                 console.log("Static Flex Generator Test Passed for desktop-app");
             } else {
                 console.error("Static Flex Generator Test Failed: Invalid project or scenarios structure");
             }
         } else if (config.consumer === 'server-app') {
-            // Validate for server-app structure
+            //server-app structure
             if (jsonData.scenarioConfig && jsonData.scenarioConfig.requests.length > 0) {
                 console.log("Static Flex Generator Test Passed for server-app");
             } else {
@@ -57,14 +57,14 @@ async function testGPTFlexGenerator() {
         const jsonData = JSON.parse(outputData);
 
         if (config.consumer === 'desktop-app') {
-            // Validate for desktop-app structure
+            //desktop-app structure
             if (jsonData.project && jsonData.scenarios && jsonData.scenarios.length > 0) {
                 console.log("GPT Flex Generator Test Passed for desktop-app");
             } else {
                 console.error("GPT Flex Generator Test Failed: Invalid project or scenarios structure");
             }
         } else if (config.consumer === 'server-app') {
-            // Validate for server-app structure
+            //server-app structure
             if (jsonData.scenarioConfig && jsonData.scenarioConfig.requests.length > 0) {
                 console.log("GPT Flex Generator Test Passed for server-app");
             } else {
@@ -102,19 +102,19 @@ async function testCurlCommandGenerator() {
 async function runTests() {
     await ensureTempDirectoryExists();
 
-    // Static Flex Generator test
+    //static Flex
     console.log("Running Static Flex Generator test...");
     await testStaticFlexGenerator();
 
-    // GPT Flex Generator test
+    //GPT Flex 
     config.useGPT = true;
     console.log("Running GPT Flex Generator test...");
     await testGPTFlexGenerator();
 
-    // Reset to default (static)
+    //reset
     config.useGPT = false;
 
-    // Run the cURL Command Generator test
+    //cURL Command
     console.log("Running cURL Command Generator test...");
     await testCurlCommandGenerator();
 }
