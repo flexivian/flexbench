@@ -1,15 +1,10 @@
-const { generateCurlCommands } = require('../src/generators/curl-generator');
-const args = process.argv.slice(2);
+const { parseArguments, generateFiles } = require('../src/utils/generation-utils');
 
-const openApiFilePathArg = args.find(arg => arg.startsWith('--openApiFilePath='));
-const outputFilePathArg = args.find(arg => arg.startsWith('--outputFilePath='));
+const options = parseArguments(process.argv.slice(2));
 
-if (!openApiFilePathArg || !outputFilePathArg) {
-    console.error("Error: Missing required arguments. Please provide --openApiFilePath and --outputFilePath.");
+if (!options.openApiFilePath || !options.curlOutputFilePath) {
+    console.error("Error: Missing required arguments. Please provide --openApiFilePath and --curlOutputFilePath.");
     process.exit(1);
 }
 
-const openApiFilePath = openApiFilePathArg.split('=')[1];
-const outputFilePath = outputFilePathArg.split('=')[1];
-
-generateCurlCommands(openApiFilePath, outputFilePath);
+generateFiles(options);

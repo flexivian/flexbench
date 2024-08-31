@@ -1,5 +1,5 @@
 const { faker } = require('@faker-js/faker');
-const config = require('../GPT/config');  // Import the config file to access the consumer setting
+const config = require('../GPT/config'); 
 
 const fieldFakerMapping = {
     'name': () => faker.person.fullName(),
@@ -35,7 +35,6 @@ const fieldFakerMapping = {
 async function generateFakeField(key, value) {
     const lowerKey = key.toLowerCase();
 
-    // Use static approach based on field mapping
     for (const [field, fakerFunction] of Object.entries(fieldFakerMapping)) {
         if (lowerKey.includes(field)) {
             return fakerFunction();

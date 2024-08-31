@@ -16,7 +16,7 @@ async function ensureTempDirectoryExists() {
 
 async function testStaticFlexGenerator() {
     const openApiFilePath = path.resolve(__dirname, '../sample/sample-openapi.yaml');
-    const outputFilePath = path.resolve(__dirname, '../temp/flex-scenarios.json');
+    const outputFilePath = path.resolve(__dirname, '../temp/flex-scenario.flex');
 
     console.log("Testing Static Flex Generator...");
 
@@ -37,7 +37,7 @@ async function testStaticFlexGenerator() {
 
 async function testGPTFlexGenerator() {
     const openApiFilePath = path.resolve(__dirname, '../sample/sample-openapi.yaml');
-    const outputFilePath = path.resolve(__dirname, '../temp/flex-scenario-gpt.json');
+    const outputFilePath = path.resolve(__dirname, '../temp/flex-scenario.flex');
 
     console.log("Testing GPT Flex Generator...");
 
@@ -82,15 +82,19 @@ async function testCurlCommandGenerator() {
 async function runTests() {
     await ensureTempDirectoryExists();
 
-    if (!config.useGPT) {
-        console.log("Running tests with static data generation...");
-        await testStaticFlexGenerator();
-    } else {
-        console.log("Running tests with both static and GPT-based data generation...");
-        await testStaticFlexGenerator();
-        await testGPTFlexGenerator();
-    }
+    // Static Flex Generator test
+    console.log("Running Static Flex Generator test...");
+    await testStaticFlexGenerator();
 
+    // GPT Flex Generator test
+    config.useGPT = true;
+    console.log("Running GPT Flex Generator test...");
+    await testGPTFlexGenerator();
+
+    // Reset to default (static)
+    config.useGPT = false;
+
+    // Run the cURL Command Generator test
     console.log("Running cURL Command Generator test...");
     await testCurlCommandGenerator();
 }

@@ -1,13 +1,13 @@
-const OpenAI = require('openai');
 const fs = require('fs').promises;
 const path = require('path');
+const OpenAI = require('openai');
 const config = require('../GPT/config');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
 
-async function generateFlexScenariosWithGPT(openApiFilePath) {
+async function generateFlexScenariosWithGPT(openApiFilePath, outputFilePath) {
     try {
         const endpoints = await parseOpenAPIDocument(openApiFilePath);
-        
+
         if (!endpoints || endpoints.length === 0) {
             console.error('Failed to parse OpenAPI document or no endpoints found.');
             return;
@@ -17,10 +17,9 @@ async function generateFlexScenariosWithGPT(openApiFilePath) {
         const flexScenario = await generateScenarioFromGPT(prompt);
 
         if (flexScenario) {
-            const outputDir = path.join(__dirname, config.outputDir); 
+            const outputDir = path.dirname(outputFilePath);
             await ensureDirectoryExists(outputDir);
 
-            const outputFilePath = path.join(outputDir, config.outputFileName);
             try {
                 await fs.writeFile(outputFilePath, JSON.stringify(flexScenario, null, 2));
                 console.log(`Flex scenarios generated and saved to ${outputFilePath}`);
@@ -37,24 +36,24 @@ async function generateFlexScenariosWithGPT(openApiFilePath) {
 
 async function generateScenarioFromGPT(prompt) {
     const openai = new OpenAI({
-        apiKey: config.openaiApiKey,  
+        apiKey: config.openaiApiKey,
     });
 
     try {
         const response = await openai.chat.completions.create({
-            model: config.model,  
+            model: config.model,
             messages: [
-                { role: "system", content: "You are a helpful assistant that generates Flexbench scenarios based on API endpoints. Please be creative" },
+                { role: "system", content: "You are a helpful assistant that generates Flexbench scenarios based on API endpoints. Please be creative." },
                 { role: "user", content: prompt }
             ],
-            max_tokens: config.maxTokens, 
-            temperature: config.temperature, 
+            max_tokens: config.maxTokens,
+            temperature: config.temperature,
         });
 
         let gptOutput = response.choices[0].message.content.trim();
 
         if (gptOutput.startsWith('```') && gptOutput.endsWith('```')) {
-            gptOutput = gptOutput.split('\n').slice(1, -1).join('\n').trim();  
+            gptOutput = gptOutput.replace(/```json|```/g, '').trim();
         }
 
         try {
@@ -77,7 +76,7 @@ async function generateScenarioFromGPT(prompt) {
 async function ensureDirectoryExists(dirPath) {
     try {
         await fs.mkdir(dirPath, { recursive: true });
-        console.log(`Directory created or already exists: ${dirPath}`);
+        console.log(`Directory created: ${dirPath}`);
     } catch (error) {
         console.error(`Failed to create directory at ${dirPath}:`, error);
         throw error;
