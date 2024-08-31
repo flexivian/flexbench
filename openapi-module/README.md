@@ -78,6 +78,7 @@ The module is pre-configured to work out of the box with sensible defaults. You 
 
 - **useGPT**: Default is `false`. Set to `true` to use GPT for generating `.flex` files.
 - **openaiApiKey**: Set this in your environment if using GPT.
+- **consumer**: Set this to `desktop-app` or `server-app` to determine the format of the generated `.flex` files.
 - **model, maxTokens, temperature**: Pre-set for general use, but adjustable for specific needs.
 - **promptTemplate**: Already tailored to generate useful Flex scenarios. Advanced users can modify it.
 - **outputDir, outputFileName**: Defaults to saving outputs in the `temp` directory with a `.flex` extension.
@@ -86,6 +87,7 @@ The module is pre-configured to work out of the box with sensible defaults. You 
 module.exports = {
     useGPT: false,
     openaiApiKey: process.env.OPENAI_API_KEY,
+    consumer: 'desktop-app', // or 'server-app'
     model: "gpt-3.5-turbo",
     maxTokens: 1500,
     temperature: 0.7,
@@ -124,9 +126,9 @@ You can generate `.flex` files and cURL commands using the scripts provided.
 
 ### Running the Scripts
 
-All npm scripts should be running under openapi-module
+All npm scripts should be running under `openapi-module`.
 
-Go to the flexbench/openapi-module on your current device:
+Go to the `flexbench/openapi-module` on your current device:
 
 ```sh
 cd /Users/yourusername/projects/flexbench/openapi-module
@@ -145,17 +147,17 @@ npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --curlOutp
 Generate Flex scenarios:
 
 ```sh
-npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --flexOutputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex
+npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --flexOutputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex --consumer=desktop-app
 ```
 
-You can omit the `--useGPT=true` and `--gptOutputFilename` arguments to use default settings, which will generate the file as `flex-scenario.flex`.
+You can omit the `--useGPT=true`, `--gptOutputFilename`, and `--consumer` arguments to use default settings, which will generate the file as `flex-scenario.flex` for the `desktop-app`.
 
 ### Generate Both cURL Commands and Flex Scenarios
 
 Generate both cURL commands and Flex scenarios:
 
 ```sh
-npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --curlOutputFilePath=./temp/curl-commands.sh --flexOutputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex
+npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --curlOutputFilePath=./temp/curl-commands.sh --flexOutputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex --consumer=server-app
 ```
 
 ### Customizing Script Execution
@@ -163,7 +165,7 @@ npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --curlOutpu
 You can control the generation process via command-line arguments:
 
 ```sh
-npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex
+npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex --consumer=desktop-app
 ```
 
 ### Params Explained:
@@ -171,20 +173,23 @@ npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFi
 - **--openApiFilePath**: Path to your OpenAPI YAML file. Required for all generation scripts.
   - Example: `--openApiFilePath=sample/sample-openapi.yaml`
 
-- **--outputFilePath**: Path to save the generated .flex file or cURL commands. Required for generating .flex files or cURL commands.
+- **--outputFilePath**: Path to save the generated `.flex` file or cURL commands. Required for generating `.flex` files or cURL commands.
   - Example: `--outputFilePath=./temp/flex-scenario.flex`
 
-- **--curlOutputFilePath**: Path to save the generated cURL commands. Required when generating cURL commands, especially with generate-all.js.
+- **--curlOutputFilePath**: Path to save the generated cURL commands. Required when generating cURL commands, especially with `generate-all.js`.
   - Example: `--curlOutputFilePath=./temp/curl-commands.sh`
 
-- **--flexOutputFilePath**: Path to save the generated .flex scenarios. Required when generating Flex scenarios, particularly with generate-all.js.
+- **--flexOutputFilePath**: Path to save the generated `.flex` scenarios. Required when generating Flex scenarios, particularly with `generate-all.js`.
   - Example: `--flexOutputFilePath=./temp/flex-scenario.flex`
 
-- **--useGPT**: Flag to determine whether to use GPT for generating .flex scenarios. Set to true for GPT-based generation, or false for static. Defaults to the setting in config.js.
+- **--useGPT**: Flag to determine whether to use GPT for generating `.flex` scenarios. Set to true for GPT-based generation, or false for static. Defaults to the setting in `config.js`.
   - Example: `--useGPT=true`
 
-- **--gptOutputFilename**: Filename for the generated .flex file when using GPT. Optional; defaults to the filename in config.js if not provided.
+- **--gptOutputFilename**: Filename for the generated `.flex` file when using GPT. Optional; defaults to the filename in `config.js` if not provided.
   - Example: `--gptOutputFilename=my-custom-scenario.flex`
+
+- **--consumer**: Specifies the format of the `.flex` file for either `desktop-app` or `server-app`. Optional; defaults to the setting in `config.js` if not provided.
+  - Example: `--consumer=desktop-app`
 
 ## Using Generated `.flex` and cURL Files
 

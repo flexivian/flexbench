@@ -1,8 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const { parseOpenAPIDocument } = require('../parsers/openapi-parser');
-const { generateFakeData } = require('./field-mapping');
-const config = require('../GPT/config');
+const { generateFakeField, generateFakeData } = require('./field-mapping'); 
 const port = 4000;
 
 async function generateFlexScenarios(openApiFilePath, outputFilePath) {
@@ -16,33 +15,52 @@ async function generateFlexScenarios(openApiFilePath, outputFilePath) {
     const outputDir = path.dirname(outputFilePath);
     ensureDirectoryExists(outputDir);
 
-    const requests = await Promise.all(endpoints.map(endpoint => createFlexRequest(endpoint)));
+    const projectId = await generateFakeField('uuid', { format: 'uuid' });
 
-    const scenarioConfig = {
-        scenario: {
-            delay: "0.5-1.5",
-            throttling: "50000",
+    const scenarios = [
+        {
+            projectId: projectId,
+            scenarioname: "Generated Scenario",
+            duration: "10",
             workers: "4",
             totalclients: "10",
-            duration: "5"
+            throttling: "50000",
+            delay: "1.0",
+            _id: await generateFakeField('uuid', { format: 'uuid' }) 
+        }
+    ];
+
+    const requests = await Promise.all(endpoints.map((endpoint, index) => 
+        createFlexRequest(endpoint, scenarios[0]._id, index + 1)
+    ));
+
+    const scenarioConfig = {
+        project: {
+            projectName: "Generated Project",
+            description: "A project generated from OpenAPI document",
+            _id: projectId 
         },
+        scenarios: scenarios,
         requests: requests
     };
 
-    fs.writeFileSync(outputFilePath, JSON.stringify({ scenarioConfig }, null, 2));
+    fs.writeFileSync(outputFilePath, JSON.stringify(scenarioConfig, null, 2));
     console.log(`Flex scenarios generated and saved to ${outputFilePath}`);
 }
 
-async function createFlexRequest(endpoint) {
+async function createFlexRequest(endpoint, scenarioId, requestIndex) {
     const request = {
+        scenarioId: scenarioId, 
+        requestName: `Request ${requestIndex}`,
+        url: `http://localhost:${port}${endpoint.path}`,
+        protocol: "http",
+        host: "localhost",
         method: endpoint.method,
         path: endpoint.path,
         port: `${port}`,
-        host: "localhost",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: {}
+        body: {},
+        header: [],
+        _id: await generateFakeField('uuid', { format: 'uuid' })
     };
 
     if (['POST', 'PUT', 'PATCH'].includes(endpoint.method)) {
@@ -50,6 +68,21 @@ async function createFlexRequest(endpoint) {
             request.body = await generateFakeData(endpoint.requestBody);
         }
     }
+
+    if (endpoint.headers) {
+        request.header = Object.keys(endpoint.headers).map(key => ({
+            key: key,
+            value: endpoint.headers[key],
+            description: ""
+        }));
+    } else {
+        request.header.push({
+            key: "Content-Type",
+            value: "application/json",
+            description: ""
+        });
+    }
+
     return request;
 }
 

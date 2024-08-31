@@ -9,6 +9,7 @@ function parseArguments(args) {
     const flexOutputFilePathArg = args.find(arg => arg.startsWith('--flexOutputFilePath='));
     const useGPTArg = args.find(arg => arg.startsWith('--useGPT='));
     const gptOutputFilenameArg = args.find(arg => arg.startsWith('--gptOutputFilename='));
+    const consumerArg = args.find(arg => arg.startsWith('--consumer='));
 
     return {
         openApiFilePath: openApiFilePathArg ? openApiFilePathArg.split('=')[1] : null,
@@ -16,6 +17,7 @@ function parseArguments(args) {
         flexOutputFilePath: flexOutputFilePathArg ? flexOutputFilePathArg.split('=')[1] : null,
         useGPT: useGPTArg ? useGPTArg.split('=')[1].toLowerCase() === 'true' : config.useGPT,
         gptOutputFilename: gptOutputFilenameArg ? gptOutputFilenameArg.split('=')[1] : config.outputFileName,
+        consumer: consumerArg ? consumerArg.split('=')[1] : config.consumer,  
     };
 }
 
@@ -24,6 +26,8 @@ function generateFiles(options) {
         config.useGPT = true;
         config.outputFileName = options.gptOutputFilename;
     }
+
+    config.consumer = options.consumer; 
 
     if (options.curlOutputFilePath) {
         generateCurlCommands(options.openApiFilePath, options.curlOutputFilePath);

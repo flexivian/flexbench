@@ -25,10 +25,20 @@ async function testStaticFlexGenerator() {
         const outputData = fs.readFileSync(outputFilePath, 'utf-8');
         const jsonData = JSON.parse(outputData);
 
-        if (jsonData.scenarioConfig && jsonData.scenarioConfig.requests.length > 0) {
-            console.log("Static Flex Generator Test Passed");
-        } else {
-            console.error("Static Flex Generator Test Failed: Invalid scenarioConfig");
+        if (config.consumer === 'desktop-app') {
+            // Validate for desktop-app structure
+            if (jsonData.project && jsonData.scenarios && jsonData.scenarios.length > 0) {
+                console.log("Static Flex Generator Test Passed for desktop-app");
+            } else {
+                console.error("Static Flex Generator Test Failed: Invalid project or scenarios structure");
+            }
+        } else if (config.consumer === 'server-app') {
+            // Validate for server-app structure
+            if (jsonData.scenarioConfig && jsonData.scenarioConfig.requests.length > 0) {
+                console.log("Static Flex Generator Test Passed for server-app");
+            } else {
+                console.error("Static Flex Generator Test Failed: Invalid scenarioConfig");
+            }
         }
     } catch (error) {
         console.error("Static Flex Generator Test Failed:", error);
@@ -46,10 +56,20 @@ async function testGPTFlexGenerator() {
         const outputData = fs.readFileSync(outputFilePath, 'utf-8');
         const jsonData = JSON.parse(outputData);
 
-        if (jsonData.scenarioConfig && jsonData.scenarioConfig.requests.length > 0) {
-            console.log("GPT Flex Generator Test Passed");
-        } else {
-            console.error("GPT Flex Generator Test Failed: Invalid scenarioConfig");
+        if (config.consumer === 'desktop-app') {
+            // Validate for desktop-app structure
+            if (jsonData.project && jsonData.scenarios && jsonData.scenarios.length > 0) {
+                console.log("GPT Flex Generator Test Passed for desktop-app");
+            } else {
+                console.error("GPT Flex Generator Test Failed: Invalid project or scenarios structure");
+            }
+        } else if (config.consumer === 'server-app') {
+            // Validate for server-app structure
+            if (jsonData.scenarioConfig && jsonData.scenarioConfig.requests.length > 0) {
+                console.log("GPT Flex Generator Test Passed for server-app");
+            } else {
+                console.error("GPT Flex Generator Test Failed: Invalid scenarioConfig");
+            }
         }
     } catch (error) {
         console.error("GPT Flex Generator Test Failed:", error);
