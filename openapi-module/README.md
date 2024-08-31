@@ -164,13 +164,13 @@ npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFi
   - Example: `--openApiFilePath=sample/sample-openapi.yaml`
 
 - **--outputFilePath**: Path to save the generated .flex file or cURL commands. Required for generating .flex files or cURL commands.
-  - Example: `--outputFilePath=temp/flex-scenarios.flex`
+  - Example: `--outputFilePath=./temp/flex-scenario.flex`
 
 - **--curlOutputFilePath**: Path to save the generated cURL commands. Required when generating cURL commands, especially with generate-all.js.
-  - Example: `--curlOutputFilePath=temp/curl-commands.sh`
+  - Example: `--curlOutputFilePath=./temp/curl-commands.sh`
 
 - **--flexOutputFilePath**: Path to save the generated .flex scenarios. Required when generating Flex scenarios, particularly with generate-all.js.
-  - Example: `--flexOutputFilePath=temp/flex-scenarios.flex`
+  - Example: `--flexOutputFilePath=./temp/flex-scenario.flex`
 
 - **--useGPT**: Flag to determine whether to use GPT for generating .flex scenarios. Set to true for GPT-based generation, or false for static. Defaults to the setting in config.js.
   - Example: `--useGPT=true`
