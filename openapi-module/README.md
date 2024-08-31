@@ -124,12 +124,20 @@ You can generate `.flex` files and cURL commands using the scripts provided.
 
 ### Running the Scripts
 
+All npm scripts should be running under openapi-module
+
+Go to the flexbench/openapi-module on your current device:
+
+```sh
+cd /Users/yourusername/projects/flexbench/openapi-module
+```
+
 ### Generate cURL Commands
 
 Generate cURL commands based on your OpenAPI file:
 
 ```sh
-npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=./temp/curl-commands.sh
+npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --curlOutputFilePath=./temp/curl-commands.sh
 ```
 
 ### Generate Flex Scenarios
@@ -137,7 +145,7 @@ npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --outputFi
 Generate Flex scenarios:
 
 ```sh
-npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex
+npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --flexOutputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex
 ```
 
 You can omit the `--useGPT=true` and `--gptOutputFilename` arguments to use default settings, which will generate the file as `flex-scenario.flex`.
