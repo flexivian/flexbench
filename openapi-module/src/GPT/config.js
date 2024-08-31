@@ -96,7 +96,7 @@ module.exports = {
           - "method": The HTTP method.
           - "path": The API path, with placeholders like "{id}" where necessary.
           - "port": Use "4000" as the default port.
-          - "host": Use "localhost" as the default host.
+          - "host": Use "http://localhost/" as the default host.
           - "headers": Include "Content-Type: application/json".
           - "body": Realistic example data based on the request body schema.
 
@@ -153,7 +153,93 @@ module.exports = {
               "_id": "0bcecd91-12b7-48e9-b8d7-3b3fdd79af1d"  // Generate realistic ID
             }
           ]
-        }`;
+        }
+          
+        Example 2: 
+        {
+  "project": {
+    "projectName": "Generated Project",
+    "description": "A project generated from OpenAPI document",
+    "_id": "29a0a575-db2b-4deb-8fb1-26b8a368dac1"
+  },
+  "scenarios": [
+    {
+      "projectId": "29a0a575-db2b-4deb-8fb1-26b8a368dac1",
+      "scenarioname": "Generated Scenario",
+      "duration": "10",
+      "workers": "4",
+      "totalclients": "10",
+      "throttling": "50000",
+      "delay": "1.0",
+      "_id": "dd9a3792-e5b8-4872-9170-9f6e074552ac"
+    }
+  ],
+  "requests": [
+    {
+      "scenarioId": "dd9a3792-e5b8-4872-9170-9f6e074552ac",
+      "requestName": "Request 1",
+      "url": "http://localhost:4000/users",
+      "protocol": "http",
+      "host": "localhost",
+      "method": "GET",
+      "path": "/users",
+      "port": "4000",
+      "body": {},
+      "header": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "description": ""
+        }
+      ],
+      "_id": "a1b236d3-6249-463d-878d-a11881f03ce1"
+    },
+    {
+      "scenarioId": "dd9a3792-e5b8-4872-9170-9f6e074552ac",
+      "requestName": "Request 2",
+      "url": "http://localhost:4000/users",
+      "protocol": "http",
+      "host": "localhost",
+      "method": "POST",
+      "path": "/users",
+      "port": "4000",
+      "body": {
+        "name": "Mr. Jacob Predovic",
+        "email": "Nadia73@hotmail.com"
+      },
+      "header": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "description": ""
+        }
+      ],
+      "_id": "690d67ac-b227-4b5c-97ac-458eec8d4297"
+    },
+    {
+      "scenarioId": "dd9a3792-e5b8-4872-9170-9f6e074552ac",
+      "requestName": "Request 3",
+      "url": "http://localhost:4000/users/{id}",
+      "protocol": "http",
+      "host": "localhost",
+      "method": "GET",
+      "path": "/users/{id}",
+      "port": "4000",
+      "body": {},
+      "header": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "description": ""
+        }
+      ],
+      "_id": "a0f26ec7-015e-4fc0-8bbe-1ed52b11959d"
+    }
+  ]
+}
+        `;
+
+        
       }
   },
 
