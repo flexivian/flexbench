@@ -2,47 +2,47 @@ const { generateCurlCommands } = require('../generators/curl-generator');
 const { generateFlexScenariosWithGPT } = require('../generators/gpt-flex-generator');
 const { generateFlexScenarios } = require('../generators/flex-generator');
 const config = require('../GPT/config');
+const path = require('path');
 
 function parseArguments(args) {
     const openApiFilePathArg = args.find(arg => arg.startsWith('--openApiFilePath='));
-    const curlOutputFilePathArg = args.find(arg => arg.startsWith('--curlOutputFilePath='));
-    const flexOutputFilePathArg = args.find(arg => arg.startsWith('--flexOutputFilePath='));
+    const outputFileNameArg = args.find(arg => arg.startsWith('--outputFileName='));
     const useGPTArg = args.find(arg => arg.startsWith('--useGPT='));
-    const gptOutputFilenameArg = args.find(arg => arg.startsWith('--gptOutputFilename='));
     const consumerArg = args.find(arg => arg.startsWith('--consumer='));
 
     return {
         openApiFilePath: openApiFilePathArg ? openApiFilePathArg.split('=')[1] : null,
-        curlOutputFilePath: curlOutputFilePathArg ? curlOutputFilePathArg.split('=')[1] : null,
-        flexOutputFilePath: flexOutputFilePathArg ? flexOutputFilePathArg.split('=')[1] : null,
+        outputFileName: outputFileNameArg ? outputFileNameArg.split('=')[1] : config.outputFileName,
         useGPT: useGPTArg ? useGPTArg.split('=')[1].toLowerCase() === 'true' : config.useGPT,
-        gptOutputFilename: gptOutputFilenameArg ? gptOutputFilenameArg.split('=')[1] : config.outputFileName,
-        consumer: consumerArg ? consumerArg.split('=')[1] : config.consumer,  
+        consumer: consumerArg ? consumerArg.split('=')[1] : config.consumer,
     };
 }
 
-function generateFiles(options) {
-    if (options.useGPT) {
-        config.useGPT = true;
-        config.outputFileName = options.gptOutputFilename;
-    }
+function generateFiles(options, scriptType) {
+    config.useGPT = options.useGPT;
+    config.outputFileName = options.outputFileName;
+    config.consumer = options.consumer;
 
-    config.consumer = options.consumer; 
+    const outputDir = path.resolve(__dirname, '../../temp');
+    const outputFilePath = path.join(outputDir, options.outputFileName);
+    const curlFilePath = path.join(outputDir, 'curl-commands.sh');
 
-    if (options.curlOutputFilePath) {
-        generateCurlCommands(options.openApiFilePath, options.curlOutputFilePath);
-    }
-
-    if (options.flexOutputFilePath) {
+    if (scriptType === 'all' || scriptType === 'flex') {
         if (config.useGPT) {
-            generateFlexScenariosWithGPT(options.openApiFilePath, options.flexOutputFilePath)
-                .then(() => console.log('Flex scenario generation with GPT complete.'))
+            generateFlexScenariosWithGPT(options.openApiFilePath, outputFilePath)
+                .then(() => console.log(`Flex scenario generation with GPT complete. Saved as ${outputFilePath}`))
                 .catch(error => console.error('Error during Flex scenario generation with GPT:', error));
         } else {
-            generateFlexScenarios(options.openApiFilePath, options.flexOutputFilePath)
-                .then(() => console.log('Flex scenario generation complete.'))
+            generateFlexScenarios(options.openApiFilePath, outputFilePath)
+                .then(() => console.log(`Flex scenario generation complete. Saved as ${outputFilePath}`))
                 .catch(error => console.error('Error during Flex scenario generation:', error));
         }
+    }
+
+    if (scriptType === 'all' || scriptType === 'curl') {
+        generateCurlCommands(options.openApiFilePath, curlFilePath)
+            .then(() => console.log(`cURL commands saved as ${curlFilePath}`))
+            .catch(error => console.error('Error during cURL command generation:', error));
     }
 }
 

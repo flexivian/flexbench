@@ -246,5 +246,4 @@ module.exports = {
   // Output settings
   outputDir: '../../temp',  
   outputFileName: 'flex-scenario.flex',  
-  curlOutputFileName: 'curl-commands.sh',
 };

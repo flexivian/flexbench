@@ -126,7 +126,7 @@ You can generate `.flex` files and cURL commands using the scripts provided.
 
 ### Running the Scripts
 
-All npm scripts should be running under `openapi-module`.
+All npm scripts should be run under `openapi-module`.
 
 Go to the `flexbench/openapi-module` on your current device:
 
@@ -139,7 +139,7 @@ cd /Users/yourusername/projects/flexbench/openapi-module
 Generate cURL commands based on your OpenAPI file:
 
 ```sh
-npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --curlOutputFilePath=./temp/curl-commands.sh
+npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --outputFileName=./temp/curl-commands.sh
 ```
 
 ### Generate Flex Scenarios
@@ -147,17 +147,17 @@ npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --curlOutp
 Generate Flex scenarios:
 
 ```sh
-npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --flexOutputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex --consumer=desktop-app
+npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFileName=flex-scenario.flex --useGPT=true --consumer=desktop-app
 ```
 
-You can omit the `--useGPT=true`, `--gptOutputFilename`, and `--consumer` arguments to use default settings, which will generate the file as `flex-scenario.flex` for the `desktop-app`.
+You can omit the `--useGPT=true` and `--consumer` arguments to use default settings, which will generate the file as `flex-scenario.flex` for the `desktop-app`.
 
 ### Generate Both cURL Commands and Flex Scenarios
 
 Generate both cURL commands and Flex scenarios:
 
 ```sh
-npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --curlOutputFilePath=./temp/curl-commands.sh --flexOutputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex --consumer=server-app
+npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --outputFileName=flex-scenario.flex --useGPT=true --consumer=server-app
 ```
 
 ### Customizing Script Execution
@@ -165,7 +165,7 @@ npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --curlOutpu
 You can control the generation process via command-line arguments:
 
 ```sh
-npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=./temp/flex-scenario.flex --useGPT=true --gptOutputFilename=my-custom-scenario.flex --consumer=desktop-app
+npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFileName=flex-scenario.flex --useGPT=true --consumer=desktop-app
 ```
 
 ### Params Explained:
@@ -173,20 +173,11 @@ npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFi
 - **--openApiFilePath**: Path to your OpenAPI YAML file. Required for all generation scripts.
   - Example: `--openApiFilePath=sample/sample-openapi.yaml`
 
-- **--outputFilePath**: Path to save the generated `.flex` file or cURL commands. Required for generating `.flex` files or cURL commands.
-  - Example: `--outputFilePath=./temp/flex-scenario.flex`
-
-- **--curlOutputFilePath**: Path to save the generated cURL commands. Required when generating cURL commands, especially with `generate-all.js`.
-  - Example: `--curlOutputFilePath=./temp/curl-commands.sh`
-
-- **--flexOutputFilePath**: Path to save the generated `.flex` scenarios. Required when generating Flex scenarios, particularly with `generate-all.js`.
-  - Example: `--flexOutputFilePath=./temp/flex-scenario.flex`
+- **--outputFileName**: Filename for the generated `.flex` file or cURL commands. Required for all generation scripts.
+  - Example: `--outputFileName=flex-scenario.flex`
 
 - **--useGPT**: Flag to determine whether to use GPT for generating `.flex` scenarios. Set to true for GPT-based generation, or false for static. Defaults to the setting in `config.js`.
   - Example: `--useGPT=true`
-
-- **--gptOutputFilename**: Filename for the generated `.flex` file when using GPT. Optional; defaults to the filename in `config.js` if not provided.
-  - Example: `--gptOutputFilename=my-custom-scenario.flex`
 
 - **--consumer**: Specifies the format of the `.flex` file for either `desktop-app` or `server-app`. Optional; defaults to the setting in `config.js` if not provided.
   - Example: `--consumer=desktop-app`
