@@ -1,168 +1,214 @@
+# Flexbench OpenAPI Module
 
-# OpenAPI
+This module parses OpenAPI documents and generates test scenarios in the form of `.flex` files and cURL commands for use with Flexbench.
 
-## Overview
+## Prerequisites
 
-This module provides functionalities to parse OpenAPI documents and generate test scenarios for Flexbench.
+- **Node.js**: Ensure you have Node.js installed, preferably the latest LTS version. Verify the installation with:
 
-## Usage Guide
-
-To use this module, you need to provide an OpenAPI YAML file that contains basic endpoints. This file will be used by Prism to run a mock server.
-
-### Configuration
-
-1. **OpenAPI YAML File**: Ensure that your OpenAPI YAML file includes the necessary endpoints that can be used by Prism for mock server operations.
-
-2. **AI Model Integration (Optional)**: If you want to leverage AI models to generate Flex scenarios with customized prompts, configure the settings in `GPT/config.js`. This will enable the use of GPT-based data generation for more dynamic and realistic testing scenarios.
-
-### Script Usage
-
-- **Generating cURL Commands and Flex Scenarios**: 
-  - Use the provided scripts to generate `.flex` files and cURL commands.
-  - These scripts will utilize `parser.js` to parse your OpenAPI YAML file, extracting endpoints and generating the necessary Flex scenarios and cURL commands based on the parsed data.
-
-- **Running Tests with Flexbench**:
-  - Copy the generated cURL commands and Flex scenarios into your test setup.
-  - Use these files to run tests with the Flexbench server application.
-  - Ensure that Prism is running the mock server as specified by your OpenAPI YAML file.
-
-## File Involved
-
+```sh
+node -v
+npm -v
 ```
+
+## Project Structure
+
+```plaintext
 openapi-module/
-├── node_modules/
-├── sample/
-│   └── sample-openapi.yaml
-├── scripts/
-│   ├── generate-all.js
-│   ├── generate-curl.js
-│   └── generate-flex.js
-├── src/
-│   ├── generators/
-│   │   ├── curl-generator.js
-│   │   ├── field-mapping.js
-│   │   ├── flex-generator.js
-│   │   └── gpt-flex-generator.js
-│   ├── GPT/
-│   │   └── config.js
-│   └── parsers/
-│       └── openapi-parser.js
-├── temp/(generated files would be save under this folder)
-├── test/
-│   ├── generators.test.js
-│   └── parser.test.js
-├── .gitignore
-├── package-lock.json
-├── package.json
-└── README.md
+├── node_modules/               # Dependencies installed via npm
+├── sample/                     # Sample files for testing
+│   └── sample-openapi.yaml     # Example OpenAPI document
+├── scripts/                    # Scripts for generating outputs
+│   ├── generate-all.js         # Script to generate both cURL commands and Flex scenarios
+│   ├── generate-curl.js        # Script to generate cURL commands
+│   └── generate-flex.js        # Script to generate Flex scenarios (.flex files)
+├── src/                        # Source files
+│   ├── generators/             # Scenario and command generation logic
+│   │   ├── curl-generator.js   # Logic for generating cURL commands
+│   │   ├── field-mapping.js    # Mapping for generating fake data
+│   │   ├── flex-generator.js   # Logic for generating Flex scenarios
+│   │   └── gpt-flex-generator.js # Logic for generating Flex scenarios using GPT
+│   ├── GPT/                    # GPT related configuration
+│   │   └── config.js           # Configuration file for GPT settings
+│   ├── parsers/                # Parsing logic
+│   │   └── openapi-parser.js   # Logic for parsing OpenAPI documents
+│   └── utils/                  # Utility functions
+│       └── generation-utils.js # Utility functions for generation scripts
+├── temp/                       # Temporary files and generated outputs
+├── test/                       # Tests for the module
+│   ├── generators.test.js      # Tests for generators
+│   └── parser.test.js          # Tests for parsers
+├── .gitignore                  # Ignored files and directories
+├── package-lock.json           # npm lock file
+├── package.json                # npm package file
+└── README.md                   # Project documentation
 ```
-
-**Features**:
-- Parse, validate, and dereference JSON/YAML schemas.
-- Resolve references (`$ref`) and bundle schemas.
-- Generate realisitc data based on parsed OpenAPI endpoints by using ML/Static approach
 
 ## Installation
 
-### To install dependencies, run the following command:
+Install dependencies by running:
 
 ```sh
 npm install
 ```
 
+## Configuration
+
+### OpenAI API Key Setup
+
+If you use GPT for scenario generation, set your OpenAI API key as an environment variable.
+
+#### Linux/MacOS:
+
+Add the API key to your shell configuration file:
+
+```bash
+export OPENAI_API_KEY='your-api-key-here'
+```
+
+Reload your shell configuration:
+
+```bash
+source ~/.bashrc  # or source ~/.zshrc, etc.
+```
+
+### Module Configuration (Optional)
+
+The module is pre-configured to work out of the box with sensible defaults. You can modify `src/GPT/config.js` to customize the behavior:
+
+- **useGPT**: Default is `false`. Set to `true` to use GPT for generating `.flex` files.
+- **openaiApiKey**: Set this in your environment if using GPT.
+- **consumer**: Set this to `desktop-app` or `server-app` to determine the format of the generated `.flex` files.
+- **model, maxTokens, temperature**: Pre-set for general use, but adjustable for specific needs.
+- **promptTemplate**: Already tailored to generate useful Flex scenarios. Advanced users can modify it.
+- **outputDir, outputFileName**: Defaults to saving outputs in the `temp` directory with a `.flex` extension.
+
+```javascript
+module.exports = {
+    useGPT: false,
+    openaiApiKey: process.env.OPENAI_API_KEY,
+    consumer: 'desktop-app', // or 'server-app'
+    model: "gpt-3.5-turbo",
+    maxTokens: 1500,
+    temperature: 0.7,
+    promptTemplate: function(endpoints) {
+        return `
+        You are given the following API endpoints from an OpenAPI document:
+
+        ${JSON.stringify(endpoints, null, 2)}
+
+        Please generate a Flex scenario JSON file that includes:
+        ...
+        `;
+    },
+    outputDir: '../../temp',
+    outputFileName: 'flex-scenario-gpt.flex',
+};
+```
+
 ## Usage
 
-### Before generate .flex file & curl-cmd for Flexbench by parsing your OpenAPI yaml:
+### Generating `.flex` Files and cURL Commands
 
-Please decide to generate scenarios by AI or static approach:
+You can generate `.flex` files and cURL commands using the scripts provided.
 
-Using static approach(Faker) - configurable template using faker to generate fake data for each schema and field
+#### Static Approach (Faker)
 
-Go to GPT/config: set useGPT into false
+1. Run the script with `--useGPT=false` to use Faker for generating data.
+2. Customize field mappings in `field-mapping.js` if needed.
+3. Run the scripts.
 
-Using AI approach(OpenAI API) - configurable template using GPT prompts to generate fake data for the .flex scenario
+#### AI Approach (OpenAI GPT)
 
-Go to GPT/config: 
-1. set useGPT into true
+1. Run the script with `--useGPT=true` to use GPT for generating data.
+2. Ensure your API key is set and the `promptTemplate` is configured in `config.js`.
+3. Run the scripts.
 
-## Setting Up the API Key
+### Running the Scripts
 
-To securely use the API key in this project, it is recommended to set it as an environment variable. Follow the steps below to configure and use the API key:
+All npm scripts should be run under `openapi-module`.
 
-### Step 1: Obtain Your API Key
-
-If you don't already have an API key, you'll need to obtain one from the relevant service provider.
-
-### Step 2: Set the API Key as an Environment Variable
-
-**Linux/MacOS:**
-
-   Open your terminal and run the following command to add the API key to your shell configuration file (e.g., `.bashrc`, `.bash_profile`, `.zshrc`):
-
-  ```bash
-   export OPENAI_API_KEY='your-api-key-here'
-  ```
-2. modify or customize your prompt for OpenAI model to generate personalized respond
-
-## Setting Up the consumer for generated file:
-
-Go to GPT/config: set consumer into 'desktop-app' / 'server-app'
-
-'desktop-app': generate desktop app consumable format JSON .flex file that allow you to import and run
-'server-app': generate server app consumable format JSON .flex file that you need to open it and copy the json over to postman for server-app testing purpose.
-
-### To parse an OpenAPI document and generate cURL commands:
-
-Run the script to generate the cURL commands:
+Go to the `flexbench/openapi-module` on your current device:
 
 ```sh
-npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=temp/curl-commands.sh
+cd /Users/yourusername/projects/flexbench/openapi-module
 ```
 
-you can use your own openapi config file instead of sample-openapi.yml.
+### Generate cURL Commands
 
-The generated cURL commands will be saved to `curl-commands.sh`.
-
-### To parse an OpenAPI document and generate Flex scenarios:
-
-Run the script to generate the Flex scenarios:
+Generate cURL commands based on your OpenAPI file:
 
 ```sh
-npm run generate-flex --  --openApiFilePath=sample/sample-openapi.yaml --outputFilePath=temp/flex-scenarios.json
+npm run generate-curl -- --openApiFilePath=sample/sample-openapi.yaml --outputFileName=./temp/curl-commands.sh
 ```
 
-you can use your own openapi config file instead of sample-openapi.yml.
+### Generate Flex Scenarios
 
-The generated Flex scenarios will be saved in the `flex-scenarios` directory.
-
-### To parse an OpenAPI document and generate both cURL commands and Flex scenarios:
-
-Run the script to generate both the cURL commands and Flex scenarios:
+Generate Flex scenarios:
 
 ```sh
-npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --curlOutputFilePath=temp/curl-commands.sh --flexOutputFilePath=temp/flex-scenarios.json
+npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFileName=flex-scenario.flex --useGPT=true --consumer=desktop-app
 ```
 
-you can use your own openapi config file instead of sample-openapi.yml.
+You can omit the `--useGPT=true` and `--consumer` arguments to use default settings, which will generate the file as `flex-scenario.flex` for the `desktop-app`.
 
-## To Use generated .flex and cURL: 
+### Generate Both cURL Commands and Flex Scenarios
 
-1. run prism to run the mock server
+Generate both cURL commands and Flex scenarios:
 
+```sh
+npm run generate-all -- --openApiFilePath=sample/sample-openapi.yaml --outputFileName=flex-scenario.flex --useGPT=true --consumer=server-app
 ```
+
+### Customizing Script Execution
+
+You can control the generation process via command-line arguments:
+
+```sh
+npm run generate-flex -- --openApiFilePath=sample/sample-openapi.yaml --outputFileName=flex-scenario.flex --useGPT=true --consumer=desktop-app
+```
+
+### Params Explained:
+
+- **--openApiFilePath**: Path to your OpenAPI YAML file. Required for all generation scripts.
+  - Example: `--openApiFilePath=sample/sample-openapi.yaml`
+
+- **--outputFileName**: Filename for the generated `.flex` file or cURL commands. Required for all generation scripts.
+  - Example: `--outputFileName=flex-scenario.flex`
+
+- **--useGPT**: Flag to determine whether to use GPT for generating `.flex` scenarios. Set to true for GPT-based generation, or false for static. Defaults to the setting in `config.js`.
+  - Example: `--useGPT=true`
+
+- **--consumer**: Specifies the format of the `.flex` file for either `desktop-app` or `server-app`. Optional; defaults to the setting in `config.js` if not provided.
+  - Example: `--consumer=desktop-app`
+
+## Using Generated `.flex` and cURL Files
+
+### Mock Server Setup
+
+1. **Install Prism** to start a mock server:
+
+```sh
 npm install -g @stoplight/prism-cli 
 ```
-```
+
+2. **Run Prism** with your OpenAPI YAML file:
+
+```sh
 prism mock sample-openapi.yaml -p 4000
 ```
-you can use your own openapi config file instead of sample-openapi.yml.
 
-2. use the flex file through Flexbench desktop app and load and run it
+### Use with Flexbench
+
+1. Load the generated `.flex` file into the Flexbench desktop app.
+2. Run the test scenarios directly from the app.
 
 ## Testing
 
-### To run tests:
+### Running Tests
 
-```
+Run tests for the module:
+
+```sh
 npm test
 ```
