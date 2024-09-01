@@ -15,7 +15,7 @@ function runTest() {
 
     //Anonymized 
     trafficSimulator.setAnonymization(true);
-    trafficSimulator.setAnonymizationManual(true);
+    trafficSimulator.setAnonymizationManualConfig('../example/anonymizer-config.json');
 
     trafficSimulator.setFunc('request', requestFunc);
 
