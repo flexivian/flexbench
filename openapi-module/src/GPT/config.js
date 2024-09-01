@@ -96,7 +96,7 @@ module.exports = {
           - "method": The HTTP method.
           - "path": The API path, with placeholders like "{id}" where necessary.
           - "port": Use "4000" as the default port.
-          - "host": Use "http://localhost/" as the default host.
+          - "host": Use "localhost" as the default host.
           - "headers": Include "Content-Type: application/json".
           - "body": Realistic example data based on the request body schema.
 
