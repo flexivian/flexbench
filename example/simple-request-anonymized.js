@@ -14,7 +14,7 @@ function runTest() {
     trafficSimulator.randomDelayBetweenRequests('0.5-1.1');
 
     //Anonymized 
-    trafficSimulator.anonymizeMode(true);
+    trafficSimulator.setAnonymization(true);
 
     trafficSimulator.setFunc('request', requestFunc);
 
@@ -62,13 +62,13 @@ var requestFunc = function () {
         options['headers'] = headers;
     }
     //you can use the provided request function from HTS, in order 'catch'/count all response codes in a stats object
-    var req = trafficSimulator.request(options, function (response, responseBody) {
+    var req = trafficSimulator.request(options, function (response) {
         console.log("Response: %s", response.statusCode);
         response.setEncoding('utf8');
         response.on('data', function (chunk) {
             console.log(chunk.length)
-        });
-        console.log("Response Body: %s", responseBody);
+            console.log('hi: ', chunk.toString());
+          });
     });
 
     req.on('error', function (err) {

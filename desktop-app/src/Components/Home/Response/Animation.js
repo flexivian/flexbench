@@ -31,8 +31,9 @@ const Animation = ({ endReq }) => {
   return (
     <div className='anim-div'>
       <div className='anim-container'>
-        <div className='progress' aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+        <div className='progress' aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">
         <img className='monitor-img' src={monitor} />
+        </div>
         <div style={{ height: "0.2vh", width: "200vw", backgroundColor: showconnection ? "transparent" : "transparent" ,marginLeft: "10%"  }}></div>
         <div style={{ width: "5vw", height: "0.2vh", marginLeft: `${marginvalue}vw`, position: "absolute", backgroundColor: showconnection ? "blue" : "transparent"  }}></div>
         <button className='cancel-req-btn' style={{ position: "absolute" }} onClick={endReq} >Cancel</button>
