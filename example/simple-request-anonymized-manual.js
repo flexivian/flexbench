@@ -2,7 +2,7 @@
  * Scenario:
  * Generate requests towards specific domain
  **/
-var trafficSimulator = require('../lib/main');
+var trafficSimulator = require('flexbench');
 
 
 function runTest() {
